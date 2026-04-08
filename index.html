@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<title>FinnputerPay — Pay the creator in $FINNPUTER.</title>
+<meta name="description" content="Non-custodial payment links for $FINNPUTER on Solana. Your fans pay in your token, directly to your wallet. Zero custody, one tap." />
+<meta name="keywords" content="FINNPUTER, Bags.fm, creator token, payment link, Solana, Phantom, non-custodial, crypto payments" />
+<meta name="theme-color" content="#08080c" />
+<link rel="canonical" href="https://finnputerpay.xyz/" />
+
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="FinnputerPay" />
+<meta property="og:title" content="FinnputerPay — Pay the creator in $FINNPUTER." />
+<meta property="og:description" content="Non-custodial payment links for $FINNPUTER on Solana. Your fans pay in your token, directly to your wallet." />
+<meta property="og:url" content="https://finnputerpay.xyz/" />
+<meta property="og:image" content="https://finnputerpay.xyz/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="FinnputerPay — Pay the creator in $FINNPUTER." />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="FinnputerPay — Pay the creator in $FINNPUTER." />
+<meta name="twitter:description" content="Non-custodial payment links for $FINNPUTER on Solana. Built for Bags.fm creators." />
+<meta name="twitter:image" content="https://finnputerpay.xyz/og-image.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+  :root{
+    --bg:          #08080c;
+    --bg-elev:     #0e0e14;
+    --glass:       rgba(255,255,255,0.035);
+    --glass-hi:    rgba(255,255,255,0.06);
+    --border:      rgba(255,255,255,0.08);
+    --border-hi:   rgba(255,255,255,0.14);
+    --ink:         #f5f2ec;
+    --ink-2:       #b8b5ae;
+    --ink-dim:     #6e6b66;
+    --finn:        #7ED957;
+    --finn-soft:   #9AE872;
+    --finn-dark:   #5AB838;
+    --sol:         #9945FF;
+    --live:        #00e676;
+
+    --display:     'Fraunces', Georgia, serif;
+    --sans:        'DM Sans', system-ui, -apple-system, sans-serif;
+    --mono:        'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+    min-height:100%;
+  }
+  body::before, body::after{
+    content:'';
+    position:fixed;
+    pointer-events:none;
+    z-index:0;
+  }
+  body::before{
+    inset:0;
+    background:
+      radial-gradient(ellipse 70% 50% at 15% 0%, rgba(126,217,87,0.14), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 100% 40%, rgba(153,69,255,0.08), transparent 60%),
+      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(126,217,87,0.05), transparent 60%);
+  }
+  body::after{
+    inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent 80%);
+  }
+  .container{position:relative;z-index:1}
+
+  /* ---------- NAV ---------- */
+  nav{
+    max-width:1200px;
+    margin:0 auto;
+    padding:32px 40px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    display:flex;align-items:center;gap:14px;
+    font-family:var(--sans);
+    font-size:15px;
+    font-weight:500;
+    letter-spacing:-0.01em;
+  }
+  .brand img{
+    width:36px;height:36px;
+    filter:drop-shadow(0 0 16px rgba(126,217,87,0.45));
+  }
+  .brand .name{color:var(--ink)}
+  .brand .name .dim{color:var(--ink-dim);font-weight:400}
+  .nav-right{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-dim);
+  }
+  .nav-right a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--border-hi);padding-bottom:1px}
+  .nav-right a:hover{color:var(--finn)}
+  @media (max-width:720px){nav{padding:24px 20px} .nav-right{display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    max-width:1200px;
+    margin:0 auto;
+    padding:64px 40px 32px;
+    text-align:center;
+  }
+  .hero .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    color:var(--ink-dim);
+    margin-bottom:24px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+  }
+  .hero .eyebrow::before, .hero .eyebrow::after{
+    content:'';
+    width:28px;
+    height:1px;
+    background:var(--border-hi);
+  }
+  h1{
+    font-family:var(--display);
+    font-weight:300;
+    font-size:clamp(42px, 7.2vw, 92px);
+    line-height:0.98;
+    letter-spacing:-0.035em;
+    margin-bottom:26px;
+    font-variation-settings:"opsz" 144, "SOFT" 30;
+  }
+  h1 .finn{color:var(--finn);font-style:normal}
+  h1 .italic{font-style:italic;font-weight:300;color:var(--ink-2)}
+  .hero p.lede{
+    max-width:620px;
+    margin:0 auto;
+    font-size:clamp(16px, 1.5vw, 19px);
+    color:var(--ink-2);
+    line-height:1.55;
+    font-weight:400;
+    letter-spacing:-0.005em;
+  }
+  .hero p.lede strong{color:var(--ink)}
+  .hero p.lede .finn{color:var(--finn);font-weight:600}
+  @media (max-width:720px){.hero{padding:48px 20px 24px}}
+
+  /* ---------- GENERATOR ---------- */
+  .stage{
+    max-width:1100px;
+    margin:56px auto 0;
+    padding:0 40px;
+  }
+  @media (max-width:720px){.stage{padding:0 20px;margin-top:40px}}
+
+  .generator{
+    position:relative;
+    border:1px solid var(--border);
+    background:var(--glass);
+    backdrop-filter:blur(32px) saturate(1.3);
+    -webkit-backdrop-filter:blur(32px) saturate(1.3);
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 60px 120px -40px rgba(0,0,0,0.6),
+      0 30px 60px -30px rgba(126,217,87,0.15);
+  }
+  .generator::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 0% 0%, rgba(126,217,87,0.08), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 100% 100%, rgba(153,69,255,0.06), transparent 60%);
+    pointer-events:none;
+  }
+  .generator-inner{
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    min-height:520px;
+  }
+  @media (max-width:860px){.generator-inner{grid-template-columns:1fr}}
+
+  /* form */
+  .form-pane{
+    padding:44px 44px 36px;
+    border-right:1px solid var(--border);
+  }
+  @media (max-width:860px){.form-pane{border-right:none;border-bottom:1px solid var(--border);padding:32px 26px 26px}}
+
+  .pane-title{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    color:var(--ink-dim);
+    margin-bottom:28px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .pane-title::before{
+    content:'';
+    width:6px;height:6px;
+    background:var(--finn);
+    border-radius:100px;
+    box-shadow:0 0 10px var(--finn);
+  }
+
+  .field{margin-bottom:22px}
+  .field label{
+    display:block;
+    font-family:var(--sans);
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink-dim);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-bottom:9px;
+  }
+  .field label .aside{color:var(--ink-dim);text-transform:none;letter-spacing:0;font-weight:400}
+
+  .amount-row{display:flex;gap:12px;align-items:stretch}
+  .amount-row .amount{flex:1}
+  .amount-row select{
+    width:90px;
+    background:var(--glass-hi);
+    border:1px solid var(--border);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
+    font-weight:500;
+    padding:0 14px;
+    border-radius:14px;
+    cursor:pointer;
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23b8b5ae' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    padding-right:32px;
+  }
+  .input{
+    width:100%;
+    background:var(--glass-hi);
+    border:1px solid var(--border);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;
+    font-weight:500;
+    padding:16px 18px;
+    border-radius:14px;
+    outline:none;
+    letter-spacing:-0.01em;
+    transition:border-color 0.2s, background 0.2s;
+  }
+  .input:focus{
+    border-color:var(--finn);
+    background:rgba(126,217,87,0.05);
+    box-shadow:0 0 0 3px rgba(126,217,87,0.1);
+  }
+  .input::placeholder{color:var(--ink-dim)}
+  .input.mono{font-family:var(--mono);font-size:12px}
+  .input.big{font-size:28px;font-weight:500;padding:18px 20px;font-family:var(--display);letter-spacing:-0.02em}
+
+  .btn-generate{
+    width:100%;
+    margin-top:10px;
+    background:linear-gradient(180deg, #8EEA65, #5AB838);
+    color:#0a1a05;
+    font-family:var(--sans);
+    font-size:16px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    padding:18px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.15) inset,
+      0 20px 40px -10px rgba(126,217,87,0.35),
+      0 1px 0 rgba(255,255,255,0.25) inset;
+    transition:transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-generate:hover{
+    transform:translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.2) inset,
+      0 24px 48px -10px rgba(126,217,87,0.5),
+      0 1px 0 rgba(255,255,255,0.3) inset;
+  }
+  .btn-generate:active{transform:translateY(0)}
+
+  /* preview */
+  .preview-pane{
+    padding:44px 44px 36px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  @media (max-width:860px){.preview-pane{padding:32px 26px 28px}}
+
+  .rate-line{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ink-dim);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--border);
+    margin-bottom:24px;
+  }
+  .rate-line .rate-val{color:var(--ink-2);font-weight:500}
+  .rate-line .rate-live{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    color:var(--live);
+  }
+  .rate-line .rate-live::before{
+    content:'';
+    width:6px;height:6px;
+    background:var(--live);
+    border-radius:100px;
+    box-shadow:0 0 8px var(--live);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+  .preview-quote, .preview-result{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+  .quote-block{margin-bottom:24px}
+  .quote-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:13px 0;
+    border-bottom:1px dashed var(--border);
+  }
+  .quote-row:last-child{border-bottom:none}
+  .quote-row .k{
+    font-family:var(--sans);
+    font-size:13px;
+    color:var(--ink-dim);
+    font-weight:400;
+  }
+  .quote-row .v{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:22px;
+    letter-spacing:-0.02em;
+    color:var(--ink);
+  }
+  .quote-row .v .unit{
+    font-family:var(--sans);
+    font-weight:500;
+    font-size:12px;
+    color:var(--ink-dim);
+    margin-left:6px;
+    letter-spacing:0;
+  }
+  .quote-row.hero .v{color:var(--finn);font-size:28px}
+
+  .preview-placeholder{
+    margin:auto 0 0;
+    text-align:center;
+    color:var(--ink-dim);
+    padding-top:14px;
+  }
+  .preview-placeholder p{
+    font-size:13px;
+    max-width:280px;
+    margin:0 auto;
+    line-height:1.55;
+  }
+
+  /* result state */
+  .preview-result{display:none}
+  .preview-result.show{display:flex;animation:fadeUp 0.5s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .result-head{
+    font-family:var(--display);
+    font-style:italic;
+    font-weight:300;
+    font-size:19px;
+    color:var(--ink-2);
+    margin-bottom:16px;
+    text-align:center;
+  }
+  .result-head::before{content:'✓ ';color:var(--live);font-style:normal}
+
+  .qr-wrap{
+    background:#fff;
+    border-radius:16px;
+    padding:14px;
+    width:170px;
+    height:170px;
+    margin:0 auto 18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  }
+  .qr-wrap img, .qr-wrap canvas{display:block;max-width:100%;height:auto}
+
+  .link-box{
+    display:flex;
+    align-items:center;
+    background:var(--glass-hi);
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:12px;
+  }
+  .link-box input{
+    flex:1;
+    background:none;
+    border:none;
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:12px;
+    padding:14px 16px;
+    outline:none;
+    text-overflow:ellipsis;
+    min-width:0;
+  }
+  .link-box button{
+    background:none;
+    border:none;
+    border-left:1px solid var(--border);
+    color:var(--ink-2);
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    padding:14px 18px;
+    cursor:pointer;
+    transition:color 0.15s, background 0.15s;
+    white-space:nowrap;
+  }
+  .link-box button:hover{color:var(--finn);background:rgba(126,217,87,0.05)}
+  .link-box button.copied{color:var(--live)}
+
+  .result-actions{display:flex;gap:10px}
+  .btn-secondary{
+    flex:1;
+    background:var(--glass-hi);
+    border:1px solid var(--border);
+    color:var(--ink-2);
+    font-family:var(--sans);
+    font-size:13px;
+    font-weight:500;
+    padding:12px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:all 0.15s;
+  }
+  .btn-secondary:hover{
+    color:var(--ink);
+    background:rgba(255,255,255,0.08);
+    border-color:var(--border-hi);
+  }
+
+  /* ---------- FEATURES ---------- */
+  .features-wrap{max-width:1100px;margin:96px auto 0;padding:0 40px}
+  @media (max-width:720px){.features-wrap{padding:0 20px;margin-top:72px}}
+
+  .section-head{text-align:center;margin-bottom:44px}
+  .section-head .eyebrow{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    color:var(--ink-dim);
+    margin-bottom:14px;
+    display:inline-block;
+  }
+  .section-head h2{
+    font-family:var(--display);
+    font-weight:300;
+    font-size:clamp(30px, 4.5vw, 52px);
+    line-height:1.05;
+    letter-spacing:-0.03em;
+    max-width:700px;
+    margin:0 auto;
+  }
+  .section-head h2 em{font-style:italic;color:var(--ink-2)}
+
+  .features{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  @media (max-width:860px){.features{grid-template-columns:1fr}}
+
+  .feature{
+    border:1px solid var(--border);
+    background:var(--glass);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-radius:20px;
+    padding:32px 28px;
+    transition:border-color 0.2s, transform 0.2s;
+  }
+  .feature:hover{
+    border-color:rgba(126,217,87,0.2);
+    transform:translateY(-2px);
+  }
+  .feature .ico{
+    width:40px;height:40px;
+    border-radius:10px;
+    background:rgba(126,217,87,0.1);
+    border:1px solid rgba(126,217,87,0.2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:18px;
+    font-family:var(--mono);
+    font-size:18px;
+    color:var(--finn);
+    font-weight:500;
+  }
+  .feature h3{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:22px;
+    letter-spacing:-0.02em;
+    margin-bottom:10px;
+  }
+  .feature p{
+    font-size:14px;
+    line-height:1.6;
+    color:var(--ink-2);
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how{max-width:1100px;margin:96px auto 0;padding:0 40px}
+  @media (max-width:720px){.how{padding:0 20px;margin-top:72px}}
+
+  .how-steps{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    border-radius:20px;
+    overflow:hidden;
+  }
+  @media (max-width:860px){.how-steps{grid-template-columns:1fr}}
+  .how-step{
+    background:var(--bg);
+    padding:36px 28px;
+    min-height:200px;
+  }
+  .how-step .num{
+    font-family:var(--display);
+    font-weight:300;
+    font-style:italic;
+    font-size:40px;
+    color:var(--finn);
+    line-height:1;
+    margin-bottom:20px;
+    letter-spacing:-0.02em;
+  }
+  .how-step h4{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:21px;
+    letter-spacing:-0.015em;
+    margin-bottom:10px;
+  }
+  .how-step p{
+    font-size:14px;
+    line-height:1.6;
+    color:var(--ink-2);
+  }
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta{
+    max-width:1100px;
+    margin:120px auto 0;
+    padding:0 40px;
+    text-align:center;
+  }
+  @media (max-width:720px){.final-cta{padding:0 20px;margin-top:88px}}
+  .final-cta-inner{
+    border:1px solid var(--border);
+    background:var(--glass);
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+    border-radius:28px;
+    padding:72px 40px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 40px 100px -30px rgba(126,217,87,0.18);
+  }
+  .final-cta-inner::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 0%, rgba(126,217,87,0.12), transparent 60%),
+      radial-gradient(ellipse 80% 40% at 50% 100%, rgba(153,69,255,0.06), transparent 60%);
+  }
+  @media (max-width:720px){.final-cta-inner{padding:52px 24px}}
+  .final-cta h2{
+    font-family:var(--display);
+    font-weight:300;
+    font-size:clamp(32px, 5vw, 60px);
+    line-height:1.02;
+    letter-spacing:-0.035em;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .final-cta h2 em{font-style:italic;color:var(--ink-2)}
+  .final-cta p{
+    max-width:480px;
+    margin:0 auto 32px;
+    font-size:16px;
+    color:var(--ink-2);
+    line-height:1.55;
+    position:relative;
+  }
+  .final-cta-btn{
+    display:inline-block;
+    background:linear-gradient(180deg, #8EEA65, #5AB838);
+    color:#0a1a05;
+    font-family:var(--sans);
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    padding:16px 32px;
+    border:none;
+    border-radius:100px;
+    cursor:pointer;
+    position:relative;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.15) inset,
+      0 20px 40px -10px rgba(126,217,87,0.4),
+      0 1px 0 rgba(255,255,255,0.25) inset;
+    transition:transform 0.15s, box-shadow 0.15s;
+    text-decoration:none;
+  }
+  .final-cta-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.2) inset,
+      0 24px 48px -10px rgba(126,217,87,0.5),
+      0 1px 0 rgba(255,255,255,0.3) inset;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    max-width:1100px;
+    margin:120px auto 0;
+    padding:40px;
+    border-top:1px solid var(--border);
+  }
+  .foot-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+  }
+  .foot-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-family:var(--sans);
+    font-size:13px;
+    color:var(--ink-2);
+  }
+  .foot-brand img{width:24px;height:24px;opacity:0.85}
+  .foot-meta{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-dim);
+  }
+  .foot-meta a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--border-hi)}
+  .foot-meta a:hover{color:var(--finn)}
+  @media (max-width:720px){footer{padding:32px 20px}}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <nav>
+    <div class="brand">
+      <img src="/logo.png" alt="Finnputer" onerror="this.onerror=null;this.src='data:image/svg+xml;base64,'" />
+      <div class="name">Finnputer<span class="dim"> Pay</span></div>
+    </div>
+    <div class="nav-right">
+      <a href="https://bags.fm" target="_blank" rel="noopener">Built on Bags</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="eyebrow">NON-CUSTODIAL · SOLANA-NATIVE · ONE TAP</div>
+    <h1>
+      Pay the <span class="italic">creator</span>.<br/>
+      In <span class="finn">$FINNPUTER</span>.
+    </h1>
+    <p class="lede">
+      Non-custodial payment links for the <strong>FINNPUTER</strong> token. Your supporters pay in <span class="finn">$FINNPUTER</span>, directly to your wallet. No middleman, no sign-up, no custody — just a link, a QR, and a tap in Phantom.
+    </p>
+  </header>
+
+  <!-- GENERATOR -->
+  <section class="stage">
+    <div class="generator">
+      <div class="generator-inner">
+
+        <!-- FORM -->
+        <div class="form-pane">
+          <div class="pane-title">Create a payment link</div>
+
+          <div class="field">
+            <label for="amount">Amount to charge</label>
+            <div class="amount-row">
+              <input id="amount" class="input big amount" type="number" placeholder="10.00" value="10" min="0.01" step="0.01" />
+              <select id="currency" aria-label="Currency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="description">Description <span class="aside">(optional)</span></label>
+            <input id="description" class="input" type="text" placeholder="e.g. Tip, commission, drop #004" />
+          </div>
+
+          <div class="field">
+            <label for="wallet">Your Solana wallet <span class="aside">(receives $FINNPUTER)</span></label>
+            <input id="wallet" class="input mono" type="text" placeholder="e.g. 7xKX…9vQp" spellcheck="false" autocomplete="off" />
+          </div>
+
+          <button id="generate" class="btn-generate">Generate Payment Link</button>
+        </div>
+
+        <!-- PREVIEW -->
+        <div class="preview-pane">
+
+          <div class="rate-line">
+            <span>1 $FINNPUTER = <span class="rate-val" id="rate-val">$—</span></span>
+            <span class="rate-live">LIVE · DEXSCREENER</span>
+          </div>
+
+          <div class="preview-quote" id="preview-quote">
+            <div class="pane-title" style="margin-bottom:18px">Live preview</div>
+            <div class="quote-block">
+              <div class="quote-row">
+                <div class="k">Fan pays</div>
+                <div class="v" id="q-fiat">$10.00<span class="unit">USD</span></div>
+              </div>
+              <div class="quote-row hero">
+                <div class="k">In $FINNPUTER</div>
+                <div class="v" id="q-finn">—<span class="unit">FINN</span></div>
+              </div>
+              <div class="quote-row">
+                <div class="k">You receive</div>
+                <div class="v" id="q-receive" style="font-size:18px">—<span class="unit">FINN</span></div>
+              </div>
+              <div class="quote-row">
+                <div class="k">Network fee</div>
+                <div class="v" style="font-size:15px">~$0.00025<span class="unit">Solana</span></div>
+              </div>
+            </div>
+            <div class="preview-placeholder">
+              <p>Fill in the amount and your wallet address to generate a shareable link with QR code.</p>
+            </div>
+          </div>
+
+          <div class="preview-result" id="preview-result">
+            <div class="result-head">Link ready to share</div>
+            <div class="qr-wrap" id="qr"></div>
+            <div class="link-box">
+              <input id="link-url" type="text" readonly />
+              <button id="copy-btn">Copy</button>
+            </div>
+            <div class="result-actions">
+              <button class="btn-secondary" id="open-link">Open link</button>
+              <button class="btn-secondary" id="new-link">New link</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <div class="features-wrap">
+    <div class="section-head">
+      <div class="eyebrow">WHAT YOU GET</div>
+      <h2>Built for creators,<br/><em>not middlemen.</em></h2>
+    </div>
+    <section class="features">
+      <div class="feature">
+        <div class="ico">◆</div>
+        <h3>Non-custodial</h3>
+        <p>Funds never touch our wallet. Payments go directly from your fan's wallet to yours, settled on Solana in seconds.</p>
+      </div>
+      <div class="feature">
+        <div class="ico">⚡</div>
+        <h3>One tap in Phantom</h3>
+        <p>Solana Pay standard. Scan the QR, Phantom opens, confirm, done. Works on desktop and mobile, no extensions to install.</p>
+      </div>
+      <div class="feature">
+        <div class="ico">◇</div>
+        <h3>Built for Bags creators</h3>
+        <p>Accept your own Bags-launched token directly. Every payment builds your bag — or fund your rent, whatever moves you.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="section-head">
+      <div class="eyebrow">HOW IT WORKS</div>
+      <h2>Three steps. <em>One transaction.</em></h2>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="num">01</div>
+        <h4>Create a link</h4>
+        <p>Enter an amount and your Solana wallet. Get a shareable link and a QR code instantly.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">02</div>
+        <h4>Share anywhere</h4>
+        <p>Drop the link in Telegram, X, Discord, an email, or print the QR on a sticker. Whatever works.</p>
+      </div>
+      <div class="how-step">
+        <div class="num">03</div>
+        <h4>Get paid in FINN</h4>
+        <p>Fan taps the link, confirms in Phantom, and $FINNPUTER lands in your wallet. On-chain. Atomic. Done.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final-cta">
+    <div class="final-cta-inner">
+      <h2>Your token, <em>your terms.</em></h2>
+      <p>Build your bag the honest way — by doing something people want to pay for.</p>
+      <a href="#top" class="final-cta-btn" onclick="document.getElementById('amount').focus();document.getElementById('amount').scrollIntoView({behavior:'smooth',block:'center'});return false;">Create a payment link →</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <img src="/logo.png" alt="" />
+        <span>Finnputer Pay</span>
+      </div>
+      <div class="foot-meta">
+        $FINNPUTER · <a href="https://solscan.io/token/Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS" target="_blank" rel="noopener">Xp8d…BAGS</a>
+      </div>
+      <div class="foot-meta">Non-custodial · Solana mainnet</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  const FINN_MINT     = 'Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS';
+  const FALLBACK_RATE = 0.00015; // USD per FINNPUTER, fallback
+  const EUR_USD       = 1.08;
+
+  const state = {
+    rateUsd: FALLBACK_RATE,
+    amount:  10,
+    currency:'USD',
+    desc:    '',
+    wallet:  '',
+  };
+
+  const $ = id => document.getElementById(id);
+  const amountEl = $('amount'),
+        currencyEl = $('currency'),
+        descEl = $('description'),
+        walletEl = $('wallet'),
+        generateBtn = $('generate'),
+        rateValEl = $('rate-val'),
+        qFiatEl = $('q-fiat'),
+        qFinnEl = $('q-finn'),
+        qReceiveEl = $('q-receive'),
+        quotePane = $('preview-quote'),
+        resultPane = $('preview-result'),
+        qrWrap = $('qr'),
+        linkUrlEl = $('link-url'),
+        copyBtn = $('copy-btn'),
+        openLinkBtn = $('open-link'),
+        newLinkBtn = $('new-link');
+
+  function fiatToUsd(amount, currency){
+    return currency === 'USD' ? amount : amount * EUR_USD;
+  }
+
+  function formatNumber(n, decimals){
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + 'M';
+    if (n >= 1_000)     return (n / 1_000).toFixed(2) + 'k';
+    return n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  function computeQuote(){
+    state.amount   = parseFloat(amountEl.value) || 0;
+    state.currency = currencyEl.value;
+    state.desc     = descEl.value.trim();
+    state.wallet   = walletEl.value.trim();
+
+    const usdValue = fiatToUsd(state.amount, state.currency);
+    const finnNeeded = state.rateUsd > 0 ? usdValue / state.rateUsd : 0;
+
+    qFiatEl.innerHTML = '$' + state.amount.toFixed(2) + '<span class="unit">' + state.currency + '</span>';
+    qFinnEl.innerHTML = formatNumber(finnNeeded, 0) + '<span class="unit">FINN</span>';
+    qReceiveEl.innerHTML = formatNumber(finnNeeded, 0) + '<span class="unit">FINN</span>';
+  }
+
+  async function fetchRate(){
+    try{
+      const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + FINN_MINT, {cache:'no-store'});
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const pair = data?.pairs?.[0];
+      const price = pair?.priceUsd ? parseFloat(pair.priceUsd) : null;
+      if (price && price > 0){
+        state.rateUsd = price;
+        rateValEl.textContent = '$' + (price < 0.01 ? price.toFixed(6) : price.toFixed(4));
+      } else {
+        rateValEl.textContent = '$' + FALLBACK_RATE.toFixed(6) + ' (est.)';
+      }
+    }catch(e){
+      rateValEl.textContent = '$' + FALLBACK_RATE.toFixed(6) + ' (est.)';
+    }
+    computeQuote();
+  }
+
+  // Solana base58 address validation: 32-44 chars, base58 alphabet
+  function validWallet(addr){
+    return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(addr);
+  }
+
+  function generateLink(){
+    if (!state.amount || state.amount <= 0){
+      amountEl.focus();
+      return;
+    }
+    if (!validWallet(state.wallet)){
+      walletEl.focus();
+      walletEl.style.borderColor = '#ed1c24';
+      setTimeout(()=>{ walletEl.style.borderColor = ''; }, 1500);
+      return;
+    }
+
+    const params = new URLSearchParams({
+      to:     state.wallet,
+      amount: state.amount.toString(),
+      cur:    state.currency,
+    });
+    if (state.desc) params.set('d', state.desc);
+
+    const url = 'https://finnputerpay.xyz/pay/?' + params.toString();
+
+    qrWrap.innerHTML = '';
+    new QRCode(qrWrap, {
+      text: url,
+      width: 142,
+      height: 142,
+      colorDark:  '#08080c',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    linkUrlEl.value = url;
+    quotePane.style.display = 'none';
+    resultPane.classList.add('show');
+  }
+
+  function resetResult(){
+    resultPane.classList.remove('show');
+    quotePane.style.display = '';
+    walletEl.focus();
+  }
+
+  async function copyLink(){
+    try{
+      await navigator.clipboard.writeText(linkUrlEl.value);
+    }catch(e){
+      linkUrlEl.select();
+      document.execCommand('copy');
+    }
+    copyBtn.textContent = 'Copied';
+    copyBtn.classList.add('copied');
+    setTimeout(()=>{
+      copyBtn.textContent = 'Copy';
+      copyBtn.classList.remove('copied');
+    }, 1600);
+  }
+
+  [amountEl, currencyEl, descEl, walletEl].forEach(el=>{
+    el.addEventListener('input', computeQuote);
+    el.addEventListener('change', computeQuote);
+  });
+  generateBtn.addEventListener('click', generateLink);
+  copyBtn.addEventListener('click', copyLink);
+  openLinkBtn.addEventListener('click', ()=> window.open(linkUrlEl.value, '_blank'));
+  newLinkBtn.addEventListener('click', resetResult);
+
+  computeQuote();
+  fetchRate();
+  setInterval(fetchRate, 60_000);
+</script>
+
+</body>
+</html>

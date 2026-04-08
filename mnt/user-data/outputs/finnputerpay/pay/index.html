@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<title>Payment — FinnputerPay</title>
+<meta name="description" content="Complete a $FINNPUTER payment on Solana. Non-custodial, one tap in Phantom." />
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#08080c" />
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="FinnputerPay" />
+<meta property="og:title" content="Payment request — FinnputerPay" />
+<meta property="og:description" content="Complete a $FINNPUTER payment on Solana." />
+<meta property="og:image" content="https://finnputerpay.xyz/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+  :root{
+    --bg:          #08080c;
+    --bg-elev:     #0e0e14;
+    --glass:       rgba(255,255,255,0.035);
+    --glass-hi:    rgba(255,255,255,0.06);
+    --border:      rgba(255,255,255,0.08);
+    --border-hi:   rgba(255,255,255,0.14);
+    --ink:         #f5f2ec;
+    --ink-2:       #b8b5ae;
+    --ink-dim:     #6e6b66;
+    --finn:        #7ED957;
+    --finn-soft:   #9AE872;
+    --finn-dark:   #5AB838;
+    --sol:         #9945FF;
+    --live:        #00e676;
+    --amber:       #ffb800;
+    --red:         #ed1c24;
+
+    --display:     'Fraunces', Georgia, serif;
+    --sans:        'DM Sans', system-ui, -apple-system, sans-serif;
+    --mono:        'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  body::before, body::after{
+    content:'';
+    position:fixed;
+    pointer-events:none;
+    z-index:0;
+  }
+  body::before{
+    inset:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(126,217,87,0.15), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(153,69,255,0.08), transparent 60%);
+  }
+  body::after{
+    inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 80%);
+  }
+  .wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+  /* NAV */
+  nav{
+    max-width:560px;
+    margin:0 auto;
+    padding:28px 24px;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px;
+    font-family:var(--sans);
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    text-decoration:none;
+  }
+  .brand img{
+    width:28px;height:28px;
+    filter:drop-shadow(0 0 12px rgba(126,217,87,0.5));
+  }
+  .brand .dim{color:var(--ink-dim);font-weight:400}
+
+  main{
+    flex:1;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:20px 20px 60px;
+    width:100%;
+  }
+  .checkout{width:100%;max-width:460px}
+
+  /* HEADER */
+  .head{text-align:center;margin-bottom:24px}
+  .head .eyebrow{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    color:var(--ink-dim);
+    padding:6px 12px;
+    border:1px solid var(--border);
+    border-radius:100px;
+    margin-bottom:18px;
+    background:var(--glass);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+  }
+  .head h1{
+    font-family:var(--display);
+    font-weight:300;
+    font-size:40px;
+    line-height:1.02;
+    letter-spacing:-0.03em;
+    margin-bottom:10px;
+  }
+  .head h1 em{font-style:italic;color:var(--finn)}
+  .head p.sub{
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-dim);
+  }
+  .head p.sub b{color:var(--ink-2);font-weight:500}
+
+  /* CARD */
+  .card{
+    position:relative;
+    border:1px solid var(--border);
+    background:var(--glass);
+    backdrop-filter:blur(32px) saturate(1.3);
+    -webkit-backdrop-filter:blur(32px) saturate(1.3);
+    border-radius:28px;
+    padding:32px 30px 28px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 60px 120px -40px rgba(0,0,0,0.6),
+      0 30px 60px -30px rgba(126,217,87,0.15);
+    overflow:hidden;
+  }
+  .card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(ellipse 60% 40% at 0% 0%, rgba(126,217,87,0.08), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 100% 100%, rgba(153,69,255,0.05), transparent 60%);
+  }
+  .card > *{position:relative}
+
+  .invoice-line{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--ink-dim);
+    display:flex;
+    justify-content:space-between;
+    padding-bottom:14px;
+    border-bottom:1px dashed var(--border);
+    margin-bottom:20px;
+  }
+  .invoice-line .chain{color:var(--finn)}
+  .desc-row{
+    font-family:var(--display);
+    font-size:20px;
+    font-weight:400;
+    letter-spacing:-0.015em;
+    color:var(--ink);
+    margin-bottom:6px;
+    line-height:1.25;
+  }
+  .desc-row.empty{font-style:italic;color:var(--ink-dim);font-size:18px}
+  .merchant-addr{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ink-dim);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:24px;
+  }
+  .merchant-addr .lbl{color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.08em;font-size:9px}
+  .merchant-addr .val{color:var(--ink-2);cursor:pointer;transition:color 0.15s}
+  .merchant-addr .val:hover{color:var(--finn)}
+
+  /* BREAKDOWN */
+  .breakdown{
+    border-top:1px solid var(--border);
+    padding-top:8px;
+    margin-bottom:22px;
+  }
+  .row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding:12px 0;
+    border-bottom:1px dashed var(--border);
+  }
+  .row:last-child{border-bottom:none}
+  .row .k{
+    font-size:12px;
+    color:var(--ink-dim);
+    font-weight:400;
+    font-family:var(--sans);
+  }
+  .row .v{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:19px;
+    letter-spacing:-0.015em;
+    color:var(--ink);
+  }
+  .row .v .unit{
+    font-family:var(--sans);
+    font-weight:500;
+    font-size:11px;
+    color:var(--ink-dim);
+    margin-left:5px;
+    letter-spacing:0;
+  }
+  .row.hero .v{font-size:30px;font-weight:500;color:var(--finn)}
+  .row.rate .v{font-size:13px;color:var(--ink-dim);font-family:var(--mono)}
+  .row.rate .rate-live{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    color:var(--live);
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .row.rate .rate-live::before{
+    content:'';
+    width:6px;height:6px;
+    background:var(--live);
+    border-radius:100px;
+    box-shadow:0 0 8px var(--live);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+  /* ACTIONS */
+  .actions{display:flex;flex-direction:column;gap:12px}
+  .btn{
+    width:100%;
+    font-family:var(--sans);
+    font-size:15px;
+    font-weight:500;
+    letter-spacing:-0.01em;
+    padding:18px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    transition:transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    text-decoration:none;
+  }
+  .btn.primary{
+    background:linear-gradient(180deg, #8EEA65, #5AB838);
+    color:#0a1a05;
+    font-weight:600;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.15) inset,
+      0 20px 40px -10px rgba(126,217,87,0.4),
+      0 1px 0 rgba(255,255,255,0.25) inset;
+  }
+  .btn.primary:hover:not(:disabled){
+    transform:translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.2) inset,
+      0 24px 48px -10px rgba(126,217,87,0.5),
+      0 1px 0 rgba(255,255,255,0.3) inset;
+  }
+  .btn.secondary{
+    background:var(--glass-hi);
+    color:var(--ink-2);
+    border:1px solid var(--border);
+  }
+  .btn.secondary:hover{color:var(--ink);border-color:var(--border-hi)}
+  .btn svg{width:18px;height:18px}
+
+  /* QR fallback */
+  .qr-fallback{
+    display:none;
+    margin-top:18px;
+    padding-top:20px;
+    border-top:1px dashed var(--border);
+    text-align:center;
+  }
+  .qr-fallback.show{display:block}
+  .qr-fallback .qr-label{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-dim);
+    margin-bottom:14px;
+  }
+  .qr-fallback .qr-box{
+    background:#fff;
+    border-radius:14px;
+    padding:12px;
+    width:160px;
+    height:160px;
+    margin:0 auto 14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .qr-fallback .qr-hint{
+    font-size:12px;
+    color:var(--ink-dim);
+    line-height:1.55;
+    max-width:280px;
+    margin:0 auto;
+  }
+  .qr-fallback .qr-hint b{color:var(--ink-2);font-weight:500}
+
+  /* BANNERS */
+  .banner{
+    display:none;
+    padding:14px 16px;
+    border-radius:12px;
+    font-size:12px;
+    line-height:1.5;
+    margin-bottom:14px;
+    border:1px solid;
+  }
+  .banner.show{display:block}
+  .banner.info{
+    background:rgba(126,217,87,0.08);
+    border-color:rgba(126,217,87,0.25);
+    color:var(--finn);
+  }
+  .banner.error{
+    background:rgba(237,28,36,0.08);
+    border-color:rgba(237,28,36,0.25);
+    color:#ff4b52;
+  }
+  .banner b{color:var(--ink);font-weight:500;display:block;margin-bottom:4px}
+
+  /* SECURE */
+  .secure{
+    text-align:center;
+    margin-top:18px;
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--ink-dim);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .secure .sep{color:var(--border-hi);margin:0 8px}
+
+  /* ERROR STATE */
+  .error-state{
+    max-width:460px;
+    text-align:center;
+    padding:60px 20px;
+  }
+  .error-state h2{
+    font-family:var(--display);
+    font-weight:300;
+    font-size:32px;
+    margin-bottom:14px;
+    color:var(--ink);
+  }
+  .error-state p{
+    color:var(--ink-2);
+    margin-bottom:24px;
+    line-height:1.55;
+  }
+  .error-state a{
+    color:var(--finn);
+    text-decoration:none;
+    font-weight:500;
+  }
+
+  /* FOOTER */
+  footer{
+    text-align:center;
+    padding:30px 20px;
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--ink-dim);
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+  }
+  footer a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--border-hi)}
+  footer a:hover{color:var(--finn)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav>
+    <a href="/" class="brand">
+      <img src="/logo.png" alt="Finnputer" />
+      <span>Finnputer<span class="dim"> Pay</span></span>
+    </a>
+  </nav>
+
+  <main>
+
+    <!-- ERROR STATE -->
+    <div class="error-state" id="error-state" style="display:none">
+      <h2>Invalid payment link</h2>
+      <p>This link is missing required information or the wallet address is not a valid Solana address. Ask the creator for a new link.</p>
+      <a href="/">← Back to finnputerpay.xyz</a>
+    </div>
+
+    <!-- CHECKOUT -->
+    <div class="checkout" id="checkout">
+
+      <div class="head">
+        <div class="eyebrow">PAYMENT REQUEST</div>
+        <h1>Pay in <em>$FINNPUTER</em></h1>
+        <p class="sub">Settled on <b>Solana</b></p>
+      </div>
+
+      <div class="card">
+        <div class="invoice-line">
+          <span id="invoice-id">#—</span>
+          <span class="chain">SOLANA · SPL</span>
+        </div>
+
+        <div class="desc-row" id="desc-row">—</div>
+        <div class="merchant-addr">
+          <span class="lbl">to</span>
+          <span class="val" id="merchant-addr" title="Click to copy">0x…</span>
+        </div>
+
+        <div class="breakdown">
+          <div class="row">
+            <div class="k">Amount</div>
+            <div class="v" id="row-amount">—<span class="unit" id="row-amount-cur">USD</span></div>
+          </div>
+          <div class="row rate">
+            <div class="k">1 $FINNPUTER =</div>
+            <div class="v"><span id="rate-val">—</span> &nbsp; <span class="rate-live">LIVE</span></div>
+          </div>
+          <div class="row hero">
+            <div class="k">You pay</div>
+            <div class="v" id="row-pay">—<span class="unit">FINN</span></div>
+          </div>
+          <div class="row">
+            <div class="k">Network fee</div>
+            <div class="v" style="font-size:14px">~$0.00025<span class="unit">Solana</span></div>
+          </div>
+        </div>
+
+        <!-- banners -->
+        <div class="banner error" id="banner-error"></div>
+        <div class="banner info" id="banner-info"></div>
+
+        <!-- actions -->
+        <div class="actions">
+          <button class="btn primary" id="pay-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Pay with Phantom
+          </button>
+          <button class="btn secondary" id="qr-btn">Show QR for any Solana wallet</button>
+          <button class="btn secondary" id="copy-btn">Copy payment details</button>
+        </div>
+
+        <!-- QR fallback -->
+        <div class="qr-fallback" id="qr-fallback">
+          <div class="qr-label">SCAN WITH ANY SOLANA WALLET</div>
+          <div class="qr-box" id="solpay-qr"></div>
+          <div class="qr-hint">Open your Solana wallet app (<b>Phantom</b>, <b>Solflare</b>, <b>Backpack</b>) and scan. The payment will auto-fill.</div>
+        </div>
+
+        <div class="secure">
+          NON-CUSTODIAL <span class="sep">·</span> ON-CHAIN <span class="sep">·</span> SOLANA PAY
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    powered by <a href="/">finnputerpay.xyz</a>
+    <span class="sep">·</span>
+    <a href="https://solscan.io/token/Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS" target="_blank" rel="noopener">$FINNPUTER contract</a>
+  </footer>
+
+</div>
+
+<script>
+  // ─── constants ────────────────────────────────────────────────────────────
+  const FINN_MINT     = 'Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS';
+  const FALLBACK_RATE = 0.00015;
+  const EUR_USD       = 1.08;
+
+  // ─── helpers ──────────────────────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(window.location.search);
+
+  function truncate(addr){
+    if (!addr || addr.length < 10) return addr || '—';
+    return addr.slice(0, 6) + '…' + addr.slice(-4);
+  }
+
+  // Solana base58 address: 32-44 chars, base58 alphabet (no 0, O, I, l)
+  function isValidSolanaAddr(a){
+    return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a || '');
+  }
+
+  function formatNumber(n, decimals = 0){
+    return n.toLocaleString('en-US', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+  }
+
+  // ─── parse URL params ─────────────────────────────────────────────────────
+  const merchant = params.get('to') || '';
+  const amount   = parseFloat(params.get('amount') || '0');
+  const currency = (params.get('cur') || 'USD').toUpperCase();
+  const desc     = params.get('d') || '';
+
+  // Generate a readable invoice ID from the wallet + amount
+  function hashInvoice(str){
+    let h = 0;
+    for (let i = 0; i < str.length; i++){
+      h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+    }
+    return Math.abs(h).toString(36).toUpperCase().slice(0, 6);
+  }
+  const invoiceId = hashInvoice(merchant + amount + currency + desc);
+
+  // ─── validate ─────────────────────────────────────────────────────────────
+  if (!isValidSolanaAddr(merchant) || amount <= 0){
+    $('checkout').style.display = 'none';
+    $('error-state').style.display = 'block';
+    throw new Error('invalid link');
+  }
+
+  // ─── render static payment details ────────────────────────────────────────
+  $('invoice-id').textContent = '#' + invoiceId;
+  $('desc-row').textContent = desc || 'Payment to creator';
+  if (!desc) $('desc-row').classList.add('empty');
+  $('merchant-addr').textContent = truncate(merchant);
+  $('merchant-addr').title = 'Click to copy: ' + merchant;
+  $('merchant-addr').addEventListener('click', () => {
+    navigator.clipboard?.writeText(merchant);
+  });
+
+  $('row-amount').innerHTML = '$' + amount.toFixed(2) + '<span class="unit">' + currency + '</span>';
+
+  // ─── rate + quote ─────────────────────────────────────────────────────────
+  const state = { rateUsd: FALLBACK_RATE, finnAmount: 0 };
+
+  function fiatToUsd(a, c){
+    return c === 'USD' ? a : a * EUR_USD;
+  }
+
+  function computeQuote(){
+    const usdValue = fiatToUsd(amount, currency);
+    const finnNeeded = state.rateUsd > 0 ? usdValue / state.rateUsd : 0;
+    state.finnAmount = finnNeeded;
+
+    $('row-pay').innerHTML = formatNumber(finnNeeded, 0) + '<span class="unit">FINN</span>';
+  }
+
+  async function fetchRate(){
+    try{
+      const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + FINN_MINT, {cache:'no-store'});
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const pair = data?.pairs?.[0];
+      const price = pair?.priceUsd ? parseFloat(pair.priceUsd) : null;
+      if (price && price > 0){
+        state.rateUsd = price;
+        $('rate-val').textContent = '$' + (price < 0.01 ? price.toFixed(6) : price.toFixed(4));
+      } else {
+        $('rate-val').textContent = '$' + FALLBACK_RATE.toFixed(6) + ' est.';
+      }
+    }catch(e){
+      $('rate-val').textContent = '$' + FALLBACK_RATE.toFixed(6) + ' est.';
+    }
+    computeQuote();
+  }
+
+  computeQuote();
+  fetchRate();
+
+  // ─── build Solana Pay URL ─────────────────────────────────────────────────
+  function buildSolanaPayUrl(){
+    // Solana Pay spec: solana:<recipient>?amount=<tokenAmount>&spl-token=<mint>&label=<label>&message=<message>
+    // amount is in human-readable token units (NOT raw)
+    const label   = 'FinnputerPay';
+    const message = desc || ('Payment #' + invoiceId);
+    const url = new URL('solana:' + merchant);
+    url.searchParams.set('amount', state.finnAmount.toFixed(0));
+    url.searchParams.set('spl-token', FINN_MINT);
+    url.searchParams.set('label', label);
+    url.searchParams.set('message', message);
+    return url.toString();
+  }
+
+  // ─── pay with Phantom ─────────────────────────────────────────────────────
+  const payBtn    = $('pay-btn');
+  const qrBtn     = $('qr-btn');
+  const copyBtn   = $('copy-btn');
+  const qrFallback = $('qr-fallback');
+  const bannerError = $('banner-error');
+  const bannerInfo  = $('banner-info');
+
+  function showError(msg){
+    bannerError.innerHTML = '<b>Something went wrong</b>' + msg;
+    bannerError.classList.add('show');
+    bannerInfo.classList.remove('show');
+  }
+  function showInfo(msg){
+    bannerInfo.innerHTML = msg;
+    bannerInfo.classList.add('show');
+    bannerError.classList.remove('show');
+  }
+  function clearBanners(){
+    bannerError.classList.remove('show');
+    bannerInfo.classList.remove('show');
+  }
+
+  async function handlePay(){
+    clearBanners();
+
+    if (state.finnAmount <= 0){
+      showError('Price not yet loaded — please wait a moment and try again.');
+      return;
+    }
+
+    const solanaPayUrl = buildSolanaPayUrl();
+
+    // Try Phantom extension first (desktop)
+    if (window.phantom?.solana?.isPhantom){
+      showInfo('<b>Opening Phantom…</b>Approve the transaction in your wallet.');
+      // Phantom extension intercepts solana: URLs automatically when opened
+      window.location.href = solanaPayUrl;
+      return;
+    }
+
+    // Mobile: deep-link to Phantom app via solana: URI
+    // Or fall back to Phantom universal link
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile){
+      // Phantom supports both solana: scheme and its own universal link
+      showInfo('<b>Opening your wallet…</b>If nothing happens, tap "Show QR" below and scan with your wallet app.');
+      window.location.href = solanaPayUrl;
+      return;
+    }
+
+    // Desktop without Phantom — show QR and instructions
+    showInfo('<b>No Phantom detected.</b>Install <a href="https://phantom.app" target="_blank" style="color:inherit;text-decoration:underline">Phantom</a> or scan the QR code below with any Solana wallet app.');
+    toggleQr(true);
+  }
+
+  function toggleQr(force){
+    const willShow = force !== undefined ? force : !qrFallback.classList.contains('show');
+    if (willShow){
+      const solanaPayUrl = buildSolanaPayUrl();
+      const qrBox = $('solpay-qr');
+      qrBox.innerHTML = '';
+      new QRCode(qrBox, {
+        text: solanaPayUrl,
+        width: 136,
+        height: 136,
+        colorDark:  '#08080c',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+      qrFallback.classList.add('show');
+      qrBtn.textContent = 'Hide QR';
+    } else {
+      qrFallback.classList.remove('show');
+      qrBtn.textContent = 'Show QR for any Solana wallet';
+    }
+  }
+
+  async function copyDetails(){
+    const solanaPayUrl = buildSolanaPayUrl();
+    const lines = [
+      'FinnputerPay — payment request',
+      '',
+      'Invoice: #' + invoiceId,
+      'To:      ' + merchant,
+      'Amount:  $' + amount.toFixed(2) + ' ' + currency,
+      'In FINN: ' + formatNumber(state.finnAmount, 0) + ' $FINNPUTER',
+      desc ? 'Note:    ' + desc : null,
+      '',
+      'Solana Pay URL:',
+      solanaPayUrl,
+      '',
+      'Web link:',
+      window.location.href,
+    ].filter(Boolean).join('\n');
+
+    try{
+      await navigator.clipboard.writeText(lines);
+      const original = copyBtn.textContent;
+      copyBtn.textContent = 'Copied ✓';
+      copyBtn.style.color = 'var(--live)';
+      setTimeout(() => {
+        copyBtn.textContent = original;
+        copyBtn.style.color = '';
+      }, 1600);
+    }catch(e){}
+  }
+
+  payBtn.addEventListener('click', handlePay);
+  qrBtn.addEventListener('click', () => toggleQr());
+  copyBtn.addEventListener('click', copyDetails);
+</script>
+
+</body>
+</html>
