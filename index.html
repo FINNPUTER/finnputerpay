@@ -4,25 +4,32 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-<title>Payment — FinnputerPay</title>
-<meta name="description" content="Complete a Solana payment. Non-custodial, one tap in Phantom." />
-<meta name="robots" content="noindex" />
+<title>FinnputerPay — Creator payment links on Solana.</title>
+<meta name="description" content="Non-custodial payment links for Solana creators. Accept SOL, USDC, or $FINNPUTER. One tap in Phantom. Zero custody, zero sign-up." />
 <meta name="theme-color" content="#08080c" />
+<link rel="canonical" href="https://finnputerpay.xyz/" />
 
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="FinnputerPay" />
-<meta property="og:title" content="Payment request — FinnputerPay" />
-<meta property="og:description" content="Complete a Solana payment." />
+<meta property="og:title" content="FinnputerPay — Creator payment links on Solana." />
+<meta property="og:description" content="Accept SOL, USDC, or $FINNPUTER. One tap in Phantom. Non-custodial." />
+<meta property="og:url" content="https://finnputerpay.xyz/" />
 <meta property="og:image" content="https://finnputerpay.xyz/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="FinnputerPay — Creator payment links on Solana." />
+<meta name="twitter:description" content="Accept SOL, USDC, or $FINNPUTER. One tap in Phantom." />
+<meta name="twitter:image" content="https://finnputerpay.xyz/og-image.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.8/lib/index.iife.min.js"></script>
 
 <style>
   :root{
@@ -30,806 +37,437 @@
     --border:rgba(255,255,255,0.08);--border-hi:rgba(255,255,255,0.14);
     --ink:#f5f2ec;--ink-2:#b8b5ae;--ink-dim:#6e6b66;
     --finn:#7ED957;--sol:#9945FF;--usdc:#2775ca;--live:#00e676;
-    --amber:#ffb800;--red:#ed1c24;
     --display:'Fraunces',Georgia,serif;
     --sans:'DM Sans',system-ui,-apple-system,sans-serif;
     --mono:'JetBrains Mono',ui-monospace,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+  html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased;min-height:100%;overflow-x:hidden}
   body::before,body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0}
-  body::before{background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(126,217,87,0.15),transparent 60%),radial-gradient(ellipse 70% 50% at 50% 100%,rgba(153,69,255,0.08),transparent 60%)}
-  body::after{background-image:linear-gradient(rgba(255,255,255,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.012) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black,transparent 80%)}
-  .wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+  body::before{background:radial-gradient(ellipse 70% 50% at 15% 0%,rgba(126,217,87,0.14),transparent 60%),radial-gradient(ellipse 60% 50% at 100% 40%,rgba(153,69,255,0.08),transparent 60%),radial-gradient(ellipse 80% 40% at 50% 100%,rgba(126,217,87,0.05),transparent 60%)}
+  body::after{background-image:linear-gradient(rgba(255,255,255,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.012) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,black,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,black,transparent 80%)}
+  .container{position:relative;z-index:1}
 
-  nav{max-width:560px;margin:0 auto;padding:28px 24px;width:100%;display:flex;align-items:center;justify-content:center}
-  .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-  .brand img{height:38px;width:auto;filter:drop-shadow(0 0 20px rgba(126,217,87,0.25))}
+  nav{max-width:1200px;margin:0 auto;padding:32px 40px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;text-decoration:none}
+  .brand img{height:44px;width:auto;filter:drop-shadow(0 0 20px rgba(126,217,87,0.25))}
+  .nav-right{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-dim)}
+  .nav-right a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--border-hi)}
+  .nav-right a:hover{color:var(--finn)}
+  @media (max-width:720px){nav{padding:24px 20px}.nav-right{display:none}}
 
-  main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:20px 20px 60px;width:100%}
-  .checkout{width:100%;max-width:460px}
+  .hero{max-width:1200px;margin:0 auto;padding:64px 40px 32px;text-align:center}
+  .hero .eyebrow{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.16em;color:var(--ink-dim);margin-bottom:24px;display:inline-flex;align-items:center;gap:10px}
+  .hero .eyebrow::before,.hero .eyebrow::after{content:'';width:28px;height:1px;background:var(--border-hi)}
+  h1{font-family:var(--display);font-weight:300;font-size:clamp(42px,7.2vw,92px);line-height:0.98;letter-spacing:-0.035em;margin-bottom:26px;font-variation-settings:"opsz" 144,"SOFT" 30}
+  h1 .finn{color:var(--finn);font-style:normal}
+  h1 .italic{font-style:italic;font-weight:300;color:var(--ink-2)}
+  .hero p.lede{max-width:640px;margin:0 auto;font-size:clamp(16px,1.5vw,19px);color:var(--ink-2);line-height:1.55}
+  .hero p.lede strong{color:var(--ink)}
+  .hero p.lede .finn{color:var(--finn);font-weight:600}
+  .hero p.lede .sol{color:var(--sol);font-weight:600}
+  .hero p.lede .usdc{color:var(--usdc);font-weight:600}
+  @media (max-width:720px){.hero{padding:48px 20px 24px}}
 
-  .head{text-align:center;margin-bottom:24px}
-  .head .eyebrow{display:inline-block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.16em;color:var(--ink-dim);padding:6px 12px;border:1px solid var(--border);border-radius:100px;margin-bottom:18px;background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-  .head h1{font-family:var(--display);font-weight:300;font-size:40px;line-height:1.02;letter-spacing:-0.03em;margin-bottom:10px}
-  .head h1 em{font-style:italic}
-  .head h1.sol em{color:var(--sol)}
-  .head h1.usdc em{color:var(--usdc)}
-  .head h1.finn em{color:var(--finn)}
-  .head p.sub{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-dim)}
-  .head p.sub b{color:var(--ink-2);font-weight:500}
+  .stage{max-width:1100px;margin:56px auto 0;padding:0 40px}
+  @media (max-width:720px){.stage{padding:0 20px;margin-top:40px}}
 
-  .card{position:relative;border:1px solid var(--border);background:var(--glass);backdrop-filter:blur(32px) saturate(1.3);-webkit-backdrop-filter:blur(32px) saturate(1.3);border-radius:28px;padding:32px 30px 28px;box-shadow:0 1px 0 rgba(255,255,255,0.06) inset,0 60px 120px -40px rgba(0,0,0,0.6),0 30px 60px -30px rgba(126,217,87,0.15);overflow:hidden}
-  .card::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 0% 0%,rgba(126,217,87,0.08),transparent 60%),radial-gradient(ellipse 50% 40% at 100% 100%,rgba(153,69,255,0.05),transparent 60%)}
-  .card > *{position:relative}
+  .generator{position:relative;border:1px solid var(--border);background:var(--glass);backdrop-filter:blur(32px) saturate(1.3);-webkit-backdrop-filter:blur(32px) saturate(1.3);border-radius:28px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,0.06) inset,0 60px 120px -40px rgba(0,0,0,0.6),0 30px 60px -30px rgba(126,217,87,0.15)}
+  .generator::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 0% 0%,rgba(126,217,87,0.08),transparent 60%),radial-gradient(ellipse 50% 40% at 100% 100%,rgba(153,69,255,0.06),transparent 60%)}
+  .generator-inner{position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:560px}
+  @media (max-width:860px){.generator-inner{grid-template-columns:1fr}}
 
-  .invoice-line{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--ink-dim);display:flex;justify-content:space-between;padding-bottom:14px;border-bottom:1px dashed var(--border);margin-bottom:20px}
-  .invoice-line .chain{color:var(--finn)}
-  .invoice-line .chain.sol{color:var(--sol)}
-  .invoice-line .chain.usdc{color:var(--usdc)}
-  .desc-row{font-family:var(--display);font-size:20px;font-weight:400;letter-spacing:-0.015em;color:var(--ink);margin-bottom:6px;line-height:1.25}
-  .desc-row.empty{font-style:italic;color:var(--ink-dim);font-size:18px}
-  .merchant-addr{font-family:var(--mono);font-size:11px;color:var(--ink-dim);display:flex;align-items:center;gap:8px;margin-bottom:24px}
-  .merchant-addr .lbl{color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.08em;font-size:9px}
-  .merchant-addr .val{color:var(--ink-2);cursor:pointer;transition:color 0.15s}
-  .merchant-addr .val:hover{color:var(--finn)}
+  .form-pane{padding:44px 44px 36px;border-right:1px solid var(--border)}
+  @media (max-width:860px){.form-pane{border-right:none;border-bottom:1px solid var(--border);padding:32px 26px 26px}}
 
-  .breakdown{border-top:1px solid var(--border);padding-top:8px;margin-bottom:22px}
-  .row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px dashed var(--border)}
-  .row:last-child{border-bottom:none}
-  .row .k{font-size:12px;color:var(--ink-dim);font-weight:400}
-  .row .v{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:-0.015em;color:var(--ink)}
-  .row .v .unit{font-family:var(--sans);font-weight:500;font-size:11px;color:var(--ink-dim);margin-left:5px;letter-spacing:0}
-  .row.hero .v{font-size:30px;font-weight:500;transition:color 0.2s}
-  .row.hero.sol .v{color:var(--sol)}
-  .row.hero.usdc .v{color:var(--usdc)}
-  .row.hero.finn .v{color:var(--finn)}
-  .row.rate .v{font-size:13px;color:var(--ink-dim);font-family:var(--mono)}
-  .row.rate .rate-live{display:inline-flex;align-items:center;gap:6px;color:var(--live);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.08em}
-  .row.rate .rate-live::before{content:'';width:6px;height:6px;background:var(--live);border-radius:100px;box-shadow:0 0 8px var(--live);animation:pulse 1.8s ease-in-out infinite}
+  .pane-title{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.16em;color:var(--ink-dim);margin-bottom:28px;display:flex;align-items:center;gap:10px}
+  .pane-title::before{content:'';width:6px;height:6px;background:var(--finn);border-radius:100px;box-shadow:0 0 10px var(--finn)}
+
+  .field{margin-bottom:22px}
+  .field label{display:block;font-size:12px;font-weight:500;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:9px}
+  .field label .aside{color:var(--ink-dim);text-transform:none;letter-spacing:0;font-weight:400}
+
+  .token-select{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--glass-hi);border:1px solid var(--border);border-radius:14px;padding:4px}
+  .tok-opt{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:13px 8px;font-size:14px;font-weight:500;color:var(--ink-dim);cursor:pointer;border-radius:10px;transition:color 0.2s,background 0.2s,box-shadow 0.2s;user-select:none}
+  .tok-opt .tok-sub{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:0.06em;opacity:0.6}
+  .tok-opt.active{color:var(--ink);background:rgba(255,255,255,0.08);box-shadow:0 0 0 1px rgba(255,255,255,0.1) inset,0 4px 12px rgba(0,0,0,0.2)}
+  .tok-opt.active.sol{color:var(--sol);box-shadow:0 0 0 1px rgba(153,69,255,0.3) inset,0 4px 12px rgba(153,69,255,0.15)}
+  .tok-opt.active.usdc{color:var(--usdc);box-shadow:0 0 0 1px rgba(39,117,202,0.3) inset,0 4px 12px rgba(39,117,202,0.15)}
+  .tok-opt.active.finn{color:var(--finn);box-shadow:0 0 0 1px rgba(126,217,87,0.3) inset,0 4px 12px rgba(126,217,87,0.15)}
+  .tok-opt[data-token="FINN"]{font-size:12px;letter-spacing:-0.02em}
+
+  .amount-row{display:flex;gap:12px;align-items:stretch}
+  .amount-row .amount{flex:1}
+  .amount-row select{width:90px;background:var(--glass-hi);border:1px solid var(--border);color:var(--ink);font-size:15px;font-weight:500;padding:0 14px;border-radius:14px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23b8b5ae' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:32px}
+  .input{width:100%;background:var(--glass-hi);border:1px solid var(--border);color:var(--ink);font-size:17px;font-weight:500;padding:16px 18px;border-radius:14px;outline:none;letter-spacing:-0.01em;transition:border-color 0.2s,background 0.2s}
+  .input:focus{border-color:var(--finn);background:rgba(126,217,87,0.05);box-shadow:0 0 0 3px rgba(126,217,87,0.1)}
+  .input::placeholder{color:var(--ink-dim)}
+  .input.mono{font-family:var(--mono);font-size:12px}
+  .input.big{font-size:28px;padding:18px 20px;font-family:var(--display);letter-spacing:-0.02em}
+
+  .btn-generate{width:100%;margin-top:10px;background:linear-gradient(180deg,#8EEA65,#5AB838);color:#0a1a05;font-size:16px;font-weight:600;letter-spacing:-0.01em;padding:18px;border:none;border-radius:14px;cursor:pointer;box-shadow:0 0 0 1px rgba(255,255,255,0.15) inset,0 20px 40px -10px rgba(126,217,87,0.35),0 1px 0 rgba(255,255,255,0.25) inset;transition:transform 0.15s,box-shadow 0.15s}
+  .btn-generate:hover{transform:translateY(-1px)}
+
+  .preview-pane{padding:44px 44px 36px;display:flex;flex-direction:column;position:relative}
+  @media (max-width:860px){.preview-pane{padding:32px 26px 28px}}
+
+  .rate-line{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.08em;padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:24px}
+  .rate-line .rate-val{color:var(--ink-2);font-weight:500}
+  .rate-line .rate-live{display:inline-flex;align-items:center;gap:7px;color:var(--live)}
+  .rate-line .rate-live::before{content:'';width:6px;height:6px;background:var(--live);border-radius:100px;box-shadow:0 0 8px var(--live);animation:pulse 1.8s ease-in-out infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-  .actions{display:flex;flex-direction:column;gap:12px}
-  .btn{width:100%;font-family:var(--sans);font-size:15px;font-weight:500;letter-spacing:-0.01em;padding:18px;border:none;border-radius:14px;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s,opacity 0.2s;display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none}
-  .btn.primary{background:linear-gradient(180deg,#8EEA65,#5AB838);color:#0a1a05;font-weight:600;box-shadow:0 0 0 1px rgba(255,255,255,0.15) inset,0 20px 40px -10px rgba(126,217,87,0.4),0 1px 0 rgba(255,255,255,0.25) inset}
-  .btn.primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 0 0 1px rgba(255,255,255,0.2) inset,0 24px 48px -10px rgba(126,217,87,0.5),0 1px 0 rgba(255,255,255,0.3) inset}
-  .btn.primary:disabled{opacity:0.5;cursor:not-allowed}
-  .btn.secondary{background:var(--glass-hi);color:var(--ink-2);border:1px solid var(--border)}
-  .btn.secondary:hover{color:var(--ink);border-color:var(--border-hi)}
-  .btn svg{width:18px;height:18px}
-  .btn.loading{pointer-events:none;opacity:0.8}
-  .btn.loading::after{content:'';display:inline-block;width:14px;height:14px;border:2px solid rgba(10,26,5,0.3);border-top-color:#0a1a05;border-radius:50%;animation:spin 0.8s linear infinite;margin-left:4px}
-  @keyframes spin{to{transform:rotate(360deg)}}
+  .preview-quote,.preview-result{flex:1;display:flex;flex-direction:column}
+  .quote-block{margin-bottom:24px}
+  .quote-row{display:flex;justify-content:space-between;align-items:baseline;padding:13px 0;border-bottom:1px dashed var(--border)}
+  .quote-row:last-child{border-bottom:none}
+  .quote-row .k{font-size:13px;color:var(--ink-dim)}
+  .quote-row .v{font-family:var(--display);font-size:22px;letter-spacing:-0.02em;color:var(--ink)}
+  .quote-row .v .unit{font-family:var(--sans);font-weight:500;font-size:12px;color:var(--ink-dim);margin-left:6px;letter-spacing:0}
+  .quote-row.hero .v{font-size:28px;transition:color 0.2s}
+  .quote-row.hero.sol .v{color:var(--sol)}
+  .quote-row.hero.usdc .v{color:var(--usdc)}
+  .quote-row.hero.finn .v{color:var(--finn)}
 
-  /* tip toggle */
-  .tip-toggle{display:none;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:rgba(126,217,87,0.04);border:1px solid rgba(126,217,87,0.15);border-radius:12px;margin-bottom:14px;cursor:pointer;transition:background 0.15s,border-color 0.15s}
-  .tip-toggle.show{display:flex}
-  .tip-toggle:hover{background:rgba(126,217,87,0.07);border-color:rgba(126,217,87,0.25)}
-  .tip-toggle label{display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;user-select:none}
-  .tip-toggle input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.5px solid var(--border-hi);border-radius:5px;background:var(--glass-hi);cursor:pointer;position:relative;transition:all 0.15s;flex-shrink:0}
-  .tip-toggle input[type="checkbox"]:checked{background:var(--finn);border-color:var(--finn)}
-  .tip-toggle input[type="checkbox"]:checked::after{content:'';position:absolute;top:1px;left:5px;width:5px;height:10px;border:solid #0a1a05;border-width:0 2px 2px 0;transform:rotate(45deg)}
-  .tip-toggle .tip-label{font-size:12px;color:var(--ink-2);line-height:1.4}
-  .tip-toggle .tip-label b{color:var(--finn);font-weight:500}
-  .tip-toggle .tip-amount{font-family:var(--display);font-size:16px;color:var(--ink);font-weight:400;letter-spacing:-0.01em;white-space:nowrap}
-  .tip-toggle .tip-amount .unit{font-family:var(--sans);font-size:10px;color:var(--ink-dim);margin-left:4px;font-weight:500}
+  .preview-placeholder{margin:auto 0 0;text-align:center;color:var(--ink-dim);padding-top:14px}
+  .preview-placeholder p{font-size:13px;max-width:280px;margin:0 auto;line-height:1.55}
 
-  .wallet-state{display:none;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--glass-hi);border:1px solid var(--border);border-radius:12px;margin-bottom:12px}
-  .wallet-state.show{display:flex}
-  .wallet-state .l{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-dim)}
-  .wallet-state .addr{font-family:var(--mono);font-size:12px;color:var(--ink)}
-  .wallet-state .balance{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-top:2px}
-  .wallet-state .balance.ok{color:var(--live)}
-  .wallet-state .balance.low{color:var(--amber)}
-  .wallet-state .disconnect{background:none;border:none;color:var(--ink-dim);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;padding:4px 8px;border-radius:6px;transition:color 0.15s,background 0.15s}
-  .wallet-state .disconnect:hover{color:var(--ink-2);background:var(--glass-hi)}
+  .preview-result{display:none}
+  .preview-result.show{display:flex;animation:fadeUp 0.5s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
-  .banner{display:none;padding:14px 16px;border-radius:12px;font-size:12px;line-height:1.5;margin-bottom:14px;border:1px solid}
-  .banner.show{display:block}
-  .banner.error{background:rgba(237,28,36,0.08);border-color:rgba(237,28,36,0.25);color:#ff4b52}
-  .banner.info{background:rgba(126,217,87,0.08);border-color:rgba(126,217,87,0.25);color:var(--finn)}
-  .banner b{color:var(--ink);font-weight:500;display:block;margin-bottom:4px}
-  .banner a{color:inherit;text-decoration:underline}
+  .result-head{font-family:var(--display);font-style:italic;font-weight:300;font-size:19px;color:var(--ink-2);margin-bottom:16px;text-align:center}
+  .result-head::before{content:'✓ ';color:var(--live);font-style:normal}
 
-  .success-state{display:none;flex-direction:column;align-items:center;text-align:center;padding:20px 0}
-  .success-state.show{display:flex}
-  .success-icon{width:64px;height:64px;border-radius:50%;background:rgba(0,230,118,0.12);border:2px solid var(--live);display:flex;align-items:center;justify-content:center;margin-bottom:18px;font-size:28px;color:var(--live);box-shadow:0 0 40px rgba(0,230,118,0.3)}
-  .success-state h3{font-family:var(--display);font-weight:300;font-size:28px;letter-spacing:-0.02em;margin-bottom:8px}
-  .success-state h3 em{font-style:italic;color:var(--live)}
-  .success-state .amount{font-family:var(--mono);font-size:13px;color:var(--ink-2);margin-bottom:20px}
-  .success-state .tx-link{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-dim);text-decoration:none;padding:10px 16px;border:1px solid var(--border);border-radius:100px;background:var(--glass-hi);transition:all 0.2s}
-  .success-state .tx-link:hover{color:var(--finn);border-color:rgba(126,217,87,0.3)}
+  .qr-wrap{background:#fff;border-radius:16px;padding:14px;width:170px;height:170px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+  .qr-wrap img,.qr-wrap canvas{display:block;max-width:100%;height:auto}
 
-  .qr-fallback{display:none;margin-top:18px;padding-top:20px;border-top:1px dashed var(--border);text-align:center}
-  .qr-fallback.show{display:block}
-  .qr-fallback .qr-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-dim);margin-bottom:14px}
-  .qr-fallback .qr-box{background:#fff;border-radius:14px;padding:12px;width:160px;height:160px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center}
-  .qr-fallback .qr-hint{font-size:12px;color:var(--ink-dim);line-height:1.55;max-width:280px;margin:0 auto}
-  .qr-fallback .qr-hint b{color:var(--ink-2);font-weight:500}
+  .link-box{display:flex;align-items:center;background:var(--glass-hi);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px}
+  .link-box input{flex:1;background:none;border:none;color:var(--ink);font-family:var(--mono);font-size:12px;padding:14px 16px;outline:none;text-overflow:ellipsis;min-width:0}
+  .link-box button{background:none;border:none;border-left:1px solid var(--border);color:var(--ink-2);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;padding:14px 18px;cursor:pointer}
+  .link-box button:hover{color:var(--finn);background:rgba(126,217,87,0.05)}
+  .link-box button.copied{color:var(--live)}
 
-  .secure{text-align:center;margin-top:18px;font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.08em}
-  .secure .sep{color:var(--border-hi);margin:0 8px}
+  .result-actions{display:flex;gap:10px}
+  .btn-secondary{flex:1;background:var(--glass-hi);border:1px solid var(--border);color:var(--ink-2);font-size:13px;font-weight:500;padding:12px;border-radius:12px;cursor:pointer;transition:all 0.15s}
+  .btn-secondary:hover{color:var(--ink);background:rgba(255,255,255,0.08);border-color:var(--border-hi)}
 
-  .error-state{max-width:460px;text-align:center;padding:60px 20px}
-  .error-state h2{font-family:var(--display);font-weight:300;font-size:32px;margin-bottom:14px;color:var(--ink)}
-  .error-state p{color:var(--ink-2);margin-bottom:24px;line-height:1.55}
-  .error-state a{color:var(--finn);text-decoration:none;font-weight:500}
+  .features-wrap{max-width:1100px;margin:96px auto 0;padding:0 40px}
+  @media (max-width:720px){.features-wrap{padding:0 20px;margin-top:72px}}
+  .section-head{text-align:center;margin-bottom:44px}
+  .section-head .eyebrow{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.16em;color:var(--ink-dim);margin-bottom:14px;display:inline-block}
+  .section-head h2{font-family:var(--display);font-weight:300;font-size:clamp(30px,4.5vw,52px);line-height:1.05;letter-spacing:-0.03em;max-width:700px;margin:0 auto}
+  .section-head h2 em{font-style:italic;color:var(--ink-2)}
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media (max-width:860px){.features{grid-template-columns:1fr}}
+  .feature{border:1px solid var(--border);background:var(--glass);backdrop-filter:blur(20px);border-radius:20px;padding:32px 28px;transition:border-color 0.2s,transform 0.2s}
+  .feature:hover{border-color:rgba(126,217,87,0.2);transform:translateY(-2px)}
+  .feature .ico{width:40px;height:40px;border-radius:10px;background:rgba(126,217,87,0.1);border:1px solid rgba(126,217,87,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:18px;font-family:var(--mono);font-size:18px;color:var(--finn);font-weight:500}
+  .feature h3{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:-0.02em;margin-bottom:10px}
+  .feature p{font-size:14px;line-height:1.6;color:var(--ink-2)}
 
-  footer{text-align:center;padding:30px 20px;font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em}
-  footer a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--border-hi)}
-  footer a:hover{color:var(--finn)}
+  footer{max-width:1100px;margin:120px auto 0;padding:40px;border-top:1px solid var(--border)}
+  .foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+  .foot-brand{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--ink-2)}
+  .foot-brand img{width:24px;height:24px;opacity:0.85}
+  .foot-meta{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-dim)}
+  .foot-meta a{color:var(--ink-2);text-decoration:none;border-bottom:1px dotted var(--border-hi)}
+  .foot-meta a:hover{color:var(--finn)}
+  @media (max-width:720px){footer{padding:32px 20px}}
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<div class="container">
 
   <nav>
-    <a href="/" class="brand">
+    <a href="#" class="brand">
       <img src="/brand.png" alt="Finnputer Pay" />
     </a>
+    <div class="nav-right"><a href="https://bags.fm" target="_blank" rel="noopener">Built on Bags</a></div>
   </nav>
 
-  <main>
+  <header class="hero">
+    <div class="eyebrow">NON-CUSTODIAL · SOLANA-NATIVE · ONE TAP</div>
+    <h1>Get paid in <span class="italic">whatever</span><br/><span class="finn">you want</span>.</h1>
+    <p class="lede">Non-custodial payment links on Solana. Accept <span class="sol">SOL</span>, <span class="usdc">USDC</span>, or <span class="finn">$FINNPUTER</span> — your choice, per link. Fans tap, Phantom opens, you get paid. No middleman, no sign-up, no custody.</p>
+  </header>
 
-    <!-- ERROR STATE -->
-    <div class="error-state" id="error-state" style="display:none">
-      <h2>Invalid payment link</h2>
-      <p>This link is missing required information or the wallet address is not valid. Ask the creator for a new link.</p>
-      <a href="/">← Back to finnputerpay.xyz</a>
-    </div>
+  <section class="stage">
+    <div class="generator">
+      <div class="generator-inner">
 
-    <!-- CHECKOUT -->
-    <div class="checkout" id="checkout">
+        <div class="form-pane">
+          <div class="pane-title">Create a payment link</div>
 
-      <div class="head">
-        <div class="eyebrow">PAYMENT REQUEST</div>
-        <h1 id="head-title">Pay in <em id="head-token">SOL</em></h1>
-        <p class="sub">Settled on <b>Solana</b></p>
-      </div>
-
-      <div class="card">
-
-        <!-- NORMAL STATE -->
-        <div id="pay-state">
-          <div class="invoice-line">
-            <span id="invoice-id">#—</span>
-            <span class="chain" id="chain-badge">SOLANA · NATIVE</span>
-          </div>
-
-          <div class="desc-row" id="desc-row">—</div>
-          <div class="merchant-addr">
-            <span class="lbl">to</span>
-            <span class="val" id="merchant-addr" title="Click to copy">—</span>
-          </div>
-
-          <div class="breakdown">
-            <div class="row">
-              <div class="k">Amount</div>
-              <div class="v" id="row-amount">—<span class="unit" id="row-amount-cur">USD</span></div>
-            </div>
-            <div class="row rate">
-              <div class="k">1 <span id="rate-token">SOL</span> =</div>
-              <div class="v"><span id="rate-val">—</span> &nbsp; <span class="rate-live">LIVE</span></div>
-            </div>
-            <div class="row hero sol" id="hero-row">
-              <div class="k">You pay</div>
-              <div class="v" id="row-pay">—<span class="unit" id="row-pay-unit">SOL</span></div>
-            </div>
-            <div class="row">
-              <div class="k">Network fee</div>
-              <div class="v" style="font-size:14px">~$0.00025<span class="unit">Solana</span></div>
+          <div class="field">
+            <label>Accept payment in</label>
+            <div class="token-select" id="token-select">
+              <div class="tok-opt sol active" data-token="SOL">SOL<span class="tok-sub">native</span></div>
+              <div class="tok-opt usdc" data-token="USDC">USDC<span class="tok-sub">stable</span></div>
+              <div class="tok-opt finn" data-token="FINN">$FINNPUTER<span class="tok-sub">creator</span></div>
             </div>
           </div>
 
-          <!-- tip toggle (shown only if BUILDER_WALLET is set) -->
-          <label class="tip-toggle" id="tip-toggle" for="tip-checkbox">
-            <div style="display:flex;align-items:center;gap:10px;flex:1">
-              <input type="checkbox" id="tip-checkbox" checked />
-              <span class="tip-label">Support the builder <b>(+1%)</b><br/><span style="font-size:10px;opacity:0.7">Keeps this tool free and non-custodial</span></span>
+          <div class="field">
+            <label for="amount">Amount to charge</label>
+            <div class="amount-row">
+              <input id="amount" class="input big amount" type="number" placeholder="10.00" value="10" min="0.01" step="0.01" />
+              <select id="currency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
             </div>
-            <span class="tip-amount" id="tip-amount">—<span class="unit" id="tip-amount-unit">SOL</span></span>
-          </label>
+          </div>
 
-          <!-- banners -->
-          <div class="banner error" id="banner-error"></div>
-          <div class="banner info" id="banner-info"></div>
+          <div class="field">
+            <label for="description">Description <span class="aside">(optional)</span></label>
+            <input id="description" class="input" type="text" placeholder="e.g. Tip, commission, drop #004" />
+          </div>
 
-          <!-- wallet status -->
-          <div class="wallet-state" id="wallet-state">
-            <div>
-              <div class="l">Connected via Phantom</div>
-              <div class="addr" id="wallet-addr">—</div>
-              <div class="balance" id="wallet-balance">Checking balance…</div>
+          <div class="field">
+            <label for="wallet">Your Solana wallet</label>
+            <input id="wallet" class="input mono" type="text" placeholder="e.g. 7xKX…9vQp" spellcheck="false" autocomplete="off" />
+          </div>
+
+          <button id="generate" class="btn-generate">Generate Payment Link</button>
+        </div>
+
+        <div class="preview-pane">
+          <div class="rate-line">
+            <span>1 <span id="rate-token">SOL</span> = <span class="rate-val" id="rate-val">$—</span></span>
+            <span class="rate-live" id="rate-source">LIVE · COINGECKO</span>
+          </div>
+
+          <div class="preview-quote" id="preview-quote">
+            <div class="pane-title" style="margin-bottom:18px">Live preview</div>
+            <div class="quote-block">
+              <div class="quote-row">
+                <div class="k">Fan pays</div>
+                <div class="v" id="q-fiat">$10.00<span class="unit">USD</span></div>
+              </div>
+              <div class="quote-row hero sol" id="q-hero">
+                <div class="k">In <span id="q-hero-label">SOL</span></div>
+                <div class="v" id="q-token">—<span class="unit" id="q-token-unit">SOL</span></div>
+              </div>
+              <div class="quote-row">
+                <div class="k">You receive</div>
+                <div class="v" id="q-receive" style="font-size:18px">—<span class="unit" id="q-receive-unit">SOL</span></div>
+              </div>
+              <div class="quote-row">
+                <div class="k">Network fee</div>
+                <div class="v" style="font-size:15px">~$0.00025<span class="unit">Solana</span></div>
+              </div>
             </div>
-            <button class="disconnect" id="disconnect-btn">Disconnect</button>
+            <div class="preview-placeholder">
+              <p>Fill in the amount and your wallet to get a shareable link with QR code.</p>
+            </div>
           </div>
 
-          <!-- actions -->
-          <div class="actions">
-            <button class="btn primary" id="connect-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 5c0 1.66 4 3 9 3s9-1.34 9-3-4-3-9-3-9 1.34-9 3z"/></svg>
-              Connect Phantom
-            </button>
-            <button class="btn primary" id="pay-btn" style="display:none">
-              Pay <span id="pay-amount">—</span> <span id="pay-token">SOL</span>
-            </button>
-            <button class="btn secondary" id="qr-btn">Show QR for mobile wallet</button>
-          </div>
-
-          <!-- QR fallback -->
-          <div class="qr-fallback" id="qr-fallback">
-            <div class="qr-label">SCAN WITH ANY SOLANA WALLET</div>
-            <div class="qr-box" id="solpay-qr"></div>
-            <div class="qr-hint">Open <b>Phantom</b>, <b>Solflare</b>, or <b>Backpack</b> on your phone and scan. The payment will auto-fill.</div>
-          </div>
-
-          <div class="secure">
-            NON-CUSTODIAL <span class="sep">·</span> ON-CHAIN <span class="sep">·</span> SOLANA PAY
+          <div class="preview-result" id="preview-result">
+            <div class="result-head">Link ready to share</div>
+            <div class="qr-wrap" id="qr"></div>
+            <div class="link-box">
+              <input id="link-url" type="text" readonly />
+              <button id="copy-btn">Copy</button>
+            </div>
+            <div class="result-actions">
+              <button class="btn-secondary" id="open-link">Open link</button>
+              <button class="btn-secondary" id="new-link">New link</button>
+            </div>
           </div>
         </div>
 
-        <!-- SUCCESS STATE -->
-        <div class="success-state" id="success-state">
-          <div class="success-icon">✓</div>
-          <h3>Payment <em>sent</em></h3>
-          <div class="amount" id="success-amount">—</div>
-          <a class="tx-link" id="tx-link" href="#" target="_blank" rel="noopener">
-            View on Solscan →
-          </a>
-        </div>
-
       </div>
-
     </div>
+  </section>
 
-  </main>
+  <div class="features-wrap">
+    <div class="section-head">
+      <div class="eyebrow">WHAT YOU GET</div>
+      <h2>Built for creators,<br/><em>not middlemen.</em></h2>
+    </div>
+    <section class="features">
+      <div class="feature">
+        <div class="ico">◆</div>
+        <h3>Non-custodial</h3>
+        <p>Funds never touch our wallet. Payments go directly from your fan's wallet to yours, on-chain in seconds.</p>
+      </div>
+      <div class="feature">
+        <div class="ico">⚡</div>
+        <h3>One tap in Phantom</h3>
+        <p>Connect Phantom, sign one transaction, done. Desktop extension or mobile app — works the same everywhere.</p>
+      </div>
+      <div class="feature">
+        <div class="ico">◇</div>
+        <h3>Your token, your choice</h3>
+        <p>Accept stablecoins for rent, SOL for savings, or your own creator token to build your bag. Different link, different token.</p>
+      </div>
+    </section>
+  </div>
 
   <footer>
-    powered by <a href="/">finnputerpay.xyz</a>
-    <span class="sep">·</span>
-    <a href="https://solscan.io/token/Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS" target="_blank" rel="noopener">$FINNPUTER</a>
+    <div class="foot-inner">
+      <div class="foot-brand"><img src="/logo.png" alt="" /><span>Finnputer Pay</span></div>
+      <div class="foot-meta">$FINNPUTER · <a href="https://solscan.io/token/Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS" target="_blank" rel="noopener">Xp8d…BAGS</a></div>
+      <div class="foot-meta">Non-custodial · Solana mainnet</div>
+    </div>
   </footer>
 
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════════════
-//  CONSTANTS
-// ═══════════════════════════════════════════════════════════════════════════
-const FINN_MINT = 'Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS';
-const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
-const RPC_URL   = 'https://api.mainnet-beta.solana.com';
-const EUR_USD   = 1.08;
+  const FINN_MINT = 'Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS';
+  const EUR_USD = 1.08;
 
-// ─── BUILDER TIP CONFIG ──────────────────────────────────────────────────
-// Set this to YOUR own Solana wallet address to receive 1% tips on every
-// payment processed through this tool. Leave as empty string to disable.
-const BUILDER_WALLET = '5EKGRHaJ6j3nqemfggaGp9XU3FRJY2iVzoYy5T5x5Yvd';
-const TIP_PERCENT    = 1.0;  // 1% tip added on top of the payment
-// ─────────────────────────────────────────────────────────────────────────
+  const TOKENS = {
+    SOL:  { decimals: 9, rate: 150 },
+    USDC: { decimals: 6, rate: 1 },
+    FINN: { decimals: 6, rate: 0.00015 },
+  };
 
-const TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
-const ASSOCIATED_TOKEN_PROGRAM_ID = 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL';
-const SYSTEM_PROGRAM_ID = '11111111111111111111111111111111';
-const SYSVAR_RENT_PUBKEY = 'SysvarRent111111111111111111111111111111111';
+  const state = { token:'SOL', amount:10, currency:'USD', desc:'', wallet:'' };
 
-const TIP_ENABLED = !!(BUILDER_WALLET && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(BUILDER_WALLET));
+  const $ = id => document.getElementById(id);
+  const amountEl=$('amount'),currencyEl=$('currency'),descEl=$('description'),walletEl=$('wallet'),
+        generateBtn=$('generate'),tokenSelectEl=$('token-select'),rateTokenEl=$('rate-token'),
+        rateValEl=$('rate-val'),rateSourceEl=$('rate-source'),qFiatEl=$('q-fiat'),
+        qTokenEl=$('q-token'),qTokenUnitEl=$('q-token-unit'),qReceiveEl=$('q-receive'),
+        qReceiveUnitEl=$('q-receive-unit'),qHeroEl=$('q-hero'),qHeroLabelEl=$('q-hero-label'),
+        quotePane=$('preview-quote'),resultPane=$('preview-result'),qrWrap=$('qr'),
+        linkUrlEl=$('link-url'),copyBtn=$('copy-btn'),openLinkBtn=$('open-link'),newLinkBtn=$('new-link');
 
-const TOKEN_CONFIG = {
-  SOL:  { name: 'SOL',        decimals: 9, mint: null,      isNative: true,  chainLabel: 'SOLANA · NATIVE' },
-  USDC: { name: 'USDC',       decimals: 6, mint: USDC_MINT, isNative: false, chainLabel: 'SOLANA · SPL' },
-  FINN: { name: '$FINNPUTER', decimals: 6, mint: FINN_MINT, isNative: false, chainLabel: 'SOLANA · BAGS.FM' },
-};
+  function fiatToUsd(a,c){ return c==='USD'?a:a*EUR_USD }
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  PARSE URL
-// ═══════════════════════════════════════════════════════════════════════════
-const params = new URLSearchParams(window.location.search);
-const merchant = params.get('to') || '';
-const amount   = parseFloat(params.get('amount') || '0');
-const currency = (params.get('cur') || 'USD').toUpperCase();
-const token    = (params.get('token') || 'SOL').toUpperCase();
-const desc     = params.get('d') || '';
+  function tokenDisplay(t){ return t==='FINN' ? '$FINNPUTER' : t; }
 
-const $ = id => document.getElementById(id);
-
-function truncate(addr){
-  if (!addr || addr.length < 10) return addr || '—';
-  return addr.slice(0, 6) + '…' + addr.slice(-4);
-}
-
-function isValidSolanaAddr(a){
-  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a || '');
-}
-
-function fiatToUsd(a, c){
-  return c === 'USD' ? a : a * EUR_USD;
-}
-
-function formatToken(n, sym){
-  if (sym === 'USDC') return n.toFixed(2);
-  if (sym === 'SOL')  return n.toFixed(4);
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + 'M';
-  if (n >= 1_000)     return (n / 1_000).toFixed(2) + 'k';
-  return n.toLocaleString('en-US', { maximumFractionDigits: 0 });
-}
-
-// Validate
-if (!isValidSolanaAddr(merchant) || amount <= 0 || !TOKEN_CONFIG[token]){
-  $('checkout').style.display = 'none';
-  $('error-state').style.display = 'block';
-  throw new Error('invalid link');
-}
-
-const tokenCfg = TOKEN_CONFIG[token];
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  STATIC RENDER
-// ═══════════════════════════════════════════════════════════════════════════
-function hashInvoice(str){
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-  return Math.abs(h).toString(36).toUpperCase().slice(0, 6);
-}
-const invoiceId = hashInvoice(merchant + amount + currency + token + desc);
-
-$('invoice-id').textContent = '#' + invoiceId;
-$('chain-badge').textContent = tokenCfg.chainLabel;
-$('chain-badge').className = 'chain ' + token.toLowerCase();
-$('desc-row').textContent = desc || 'Payment to creator';
-if (!desc) $('desc-row').classList.add('empty');
-$('merchant-addr').textContent = truncate(merchant);
-$('merchant-addr').title = 'Click to copy: ' + merchant;
-$('merchant-addr').addEventListener('click', () => {
-  navigator.clipboard?.writeText(merchant);
-});
-
-$('row-amount').innerHTML = '$' + amount.toFixed(2) + '<span class="unit">' + currency + '</span>';
-$('rate-token').textContent = tokenCfg.name;
-$('row-pay-unit').textContent = tokenCfg.name;
-$('head-token').textContent = tokenCfg.name;
-$('head-title').className = token.toLowerCase();
-$('hero-row').classList.remove('sol', 'usdc', 'finn');
-$('hero-row').classList.add(token.toLowerCase());
-$('pay-token').textContent = tokenCfg.name;
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  LIVE RATE
-// ═══════════════════════════════════════════════════════════════════════════
-const state = {
-  rateUsd:     token === 'USDC' ? 1 : (token === 'SOL' ? 150 : 0.00015),
-  tokenAmount: 0,
-  rawAmount:   0n,
-  tipAmount:   0,
-  rawTip:      0n,
-  tipActive:   TIP_ENABLED, // starts enabled if builder wallet is set
-  mintDecimals: tokenCfg.decimals,
-  connectedPubkey: null,
-};
-
-function computeQuote(){
-  const usdValue = fiatToUsd(amount, currency);
-  const tokenAmount = state.rateUsd > 0 ? usdValue / state.rateUsd : 0;
-  state.tokenAmount = tokenAmount;
-  state.rawAmount = BigInt(Math.floor(tokenAmount * Math.pow(10, state.mintDecimals)));
-
-  // tip
-  if (TIP_ENABLED && state.tipActive){
-    state.tipAmount = tokenAmount * (TIP_PERCENT / 100);
-    state.rawTip = BigInt(Math.floor(state.tipAmount * Math.pow(10, state.mintDecimals)));
-  } else {
-    state.tipAmount = 0;
-    state.rawTip = 0n;
+  function formatTokenAmount(n,sym){
+    if (sym==='USDC') return n.toFixed(2);
+    if (sym==='SOL')  return n.toFixed(4);
+    if (n>=1_000_000) return (n/1_000_000).toFixed(2)+'M';
+    if (n>=1_000)     return (n/1_000).toFixed(2)+'k';
+    return n.toLocaleString('en-US',{maximumFractionDigits:0});
   }
 
-  const totalShown = tokenAmount + state.tipAmount;
-  $('row-pay').innerHTML = formatToken(totalShown, token) + '<span class="unit">' + tokenCfg.name + '</span>';
-  $('pay-amount').textContent = formatToken(totalShown, token);
-
-  // update tip display
-  const tipEl = $('tip-amount');
-  if (tipEl){
-    tipEl.innerHTML = '+ ' + formatToken(state.tipAmount, token) + '<span class="unit">' + token + '</span>';
-  }
-
-  const rateDisp = state.rateUsd < 0.01 ? state.rateUsd.toFixed(6) : state.rateUsd.toFixed(state.rateUsd < 10 ? 4 : 2);
-  $('rate-val').textContent = '$' + rateDisp;
-}
-
-async function fetchRate(){
-  if (token === 'USDC'){ state.rateUsd = 1; computeQuote(); return; }
-  try{
-    if (token === 'SOL'){
-      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd', {cache:'no-store'});
-      const data = await res.json();
-      const p = data?.solana?.usd;
-      if (p > 0) state.rateUsd = p;
-    } else if (token === 'FINN'){
-      const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + FINN_MINT, {cache:'no-store'});
-      const data = await res.json();
-      const p = data?.pairs?.[0]?.priceUsd;
-      if (p && parseFloat(p) > 0) state.rateUsd = parseFloat(p);
-    }
-  }catch(e){}
-  computeQuote();
-}
-
-computeQuote();
-fetchRate();
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  SOLANA WEB3 — wait for library, then fetch mint decimals
-// ═══════════════════════════════════════════════════════════════════════════
-let sw3 = null;
-let connection = null;
-
-function waitForSolanaWeb3(){
-  return new Promise((resolve) => {
-    if (window.solanaWeb3){ resolve(window.solanaWeb3); return; }
-    const check = setInterval(() => {
-      if (window.solanaWeb3){
-        clearInterval(check);
-        resolve(window.solanaWeb3);
-      }
-    }, 50);
-  });
-}
-
-async function fetchMintDecimals(){
-  if (!tokenCfg.mint) return;
-  try{
-    const mintPubkey = new sw3.PublicKey(tokenCfg.mint);
-    const info = await connection.getParsedAccountInfo(mintPubkey);
-    const decimals = info?.value?.data?.parsed?.info?.decimals;
-    if (typeof decimals === 'number'){
-      state.mintDecimals = decimals;
-      computeQuote();
-    }
-  }catch(e){}
-}
-
-(async () => {
-  sw3 = await waitForSolanaWeb3();
-  connection = new sw3.Connection(RPC_URL, 'confirmed');
-  await fetchMintDecimals();
-})();
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  SPL TOKEN HELPERS (manual instruction construction)
-// ═══════════════════════════════════════════════════════════════════════════
-async function findAssociatedTokenAddress(walletPubkey, mintPubkey){
-  const [address] = await sw3.PublicKey.findProgramAddress(
-    [
-      walletPubkey.toBuffer(),
-      new sw3.PublicKey(TOKEN_PROGRAM_ID).toBuffer(),
-      mintPubkey.toBuffer(),
-    ],
-    new sw3.PublicKey(ASSOCIATED_TOKEN_PROGRAM_ID)
-  );
-  return address;
-}
-
-function createSPLTransferInstruction(sourceAta, destAta, ownerPubkey, amountRaw){
-  // SPL Token Transfer: instruction 3, amount as u64 LE
-  const data = new Uint8Array(9);
-  data[0] = 3;
-  const view = new DataView(data.buffer, 1, 8);
-  view.setBigUint64(0, amountRaw, true);
-
-  return new sw3.TransactionInstruction({
-    keys: [
-      { pubkey: sourceAta,    isSigner: false, isWritable: true },
-      { pubkey: destAta,      isSigner: false, isWritable: true },
-      { pubkey: ownerPubkey,  isSigner: true,  isWritable: false },
-    ],
-    programId: new sw3.PublicKey(TOKEN_PROGRAM_ID),
-    data: data,
-  });
-}
-
-function createAssociatedTokenAccountInstruction(payer, ata, owner, mint){
-  return new sw3.TransactionInstruction({
-    keys: [
-      { pubkey: payer, isSigner: true,  isWritable: true },
-      { pubkey: ata,   isSigner: false, isWritable: true },
-      { pubkey: owner, isSigner: false, isWritable: false },
-      { pubkey: mint,  isSigner: false, isWritable: false },
-      { pubkey: new sw3.PublicKey(SYSTEM_PROGRAM_ID), isSigner: false, isWritable: false },
-      { pubkey: new sw3.PublicKey(TOKEN_PROGRAM_ID),  isSigner: false, isWritable: false },
-    ],
-    programId: new sw3.PublicKey(ASSOCIATED_TOKEN_PROGRAM_ID),
-    data: new Uint8Array(0),
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  UI HELPERS
-// ═══════════════════════════════════════════════════════════════════════════
-const connectBtn   = $('connect-btn');
-const payBtn       = $('pay-btn');
-const qrBtn        = $('qr-btn');
-const walletStateEl = $('wallet-state');
-const walletAddrEl  = $('wallet-addr');
-const walletBalanceEl = $('wallet-balance');
-const disconnectBtn = $('disconnect-btn');
-const bannerError   = $('banner-error');
-const bannerInfo    = $('banner-info');
-const successState  = $('success-state');
-const payState      = $('pay-state');
-
-function showError(msg){
-  bannerError.innerHTML = '<b>Something went wrong</b>' + msg;
-  bannerError.classList.add('show');
-  bannerInfo.classList.remove('show');
-}
-function showInfo(msg){
-  bannerInfo.innerHTML = msg;
-  bannerInfo.classList.add('show');
-  bannerError.classList.remove('show');
-}
-function clearBanners(){
-  bannerError.classList.remove('show');
-  bannerInfo.classList.remove('show');
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  WALLET CONNECT
-// ═══════════════════════════════════════════════════════════════════════════
-async function connectPhantom(){
-  clearBanners();
-
-  // Check Phantom availability
-  const provider = window.phantom?.solana;
-  if (!provider?.isPhantom){
-    showError('Phantom wallet not detected. Install it at <a href="https://phantom.app" target="_blank">phantom.app</a>, then reload this page.');
-    return;
-  }
-
-  try{
-    connectBtn.classList.add('loading');
-    connectBtn.disabled = true;
-
-    const resp = await provider.connect();
-    const pubkey = resp.publicKey;
-    state.connectedPubkey = pubkey;
-
-    walletAddrEl.textContent = truncate(pubkey.toString());
-    walletAddrEl.title = pubkey.toString();
-    walletStateEl.classList.add('show');
-    connectBtn.style.display = 'none';
-    payBtn.style.display = 'flex';
-
-    // Check balance
-    await checkBalance(pubkey);
-
-    // Listen for account changes
-    provider.on && provider.on('accountChanged', (newPubkey) => {
-      if (newPubkey){
-        state.connectedPubkey = newPubkey;
-        walletAddrEl.textContent = truncate(newPubkey.toString());
-        checkBalance(newPubkey);
-      } else {
-        disconnect();
-      }
+  function setToken(token){
+    state.token = token;
+    tokenSelectEl.querySelectorAll('.tok-opt').forEach(el=>{
+      el.classList.toggle('active', el.dataset.token===token);
     });
-    provider.on && provider.on('disconnect', disconnect);
-
-  }catch(e){
-    const msg = e?.code === 4001 ? 'You rejected the connection.' : (e?.message || 'Could not connect to Phantom.');
-    showError(msg);
-  }finally{
-    connectBtn.classList.remove('loading');
-    connectBtn.disabled = false;
-  }
-}
-
-async function checkBalance(pubkey){
-  if (!connection || !sw3) return;
-  const totalNeeded = state.tokenAmount + state.tipAmount;
-  try{
-    if (token === 'SOL'){
-      const lamports = await connection.getBalance(pubkey);
-      const sol = lamports / 1e9;
-      const needed = totalNeeded + 0.001; // + buffer for gas
-      if (sol >= needed){
-        walletBalanceEl.textContent = 'Balance: ' + sol.toFixed(4) + ' SOL ✓';
-        walletBalanceEl.className = 'balance ok';
-      } else {
-        walletBalanceEl.textContent = 'Balance: ' + sol.toFixed(4) + ' SOL (need ' + totalNeeded.toFixed(4) + ')';
-        walletBalanceEl.className = 'balance low';
-      }
-    } else {
-      // SPL token — find sender's ATA and check balance
-      const mintPubkey = new sw3.PublicKey(tokenCfg.mint);
-      const senderAta = await findAssociatedTokenAddress(pubkey, mintPubkey);
-      try{
-        const balInfo = await connection.getTokenAccountBalance(senderAta);
-        const uiAmount = balInfo?.value?.uiAmount || 0;
-        if (uiAmount >= totalNeeded){
-          walletBalanceEl.textContent = 'Balance: ' + formatToken(uiAmount, token) + ' ' + tokenCfg.name + ' ✓';
-          walletBalanceEl.className = 'balance ok';
-        } else {
-          walletBalanceEl.textContent = 'Balance: ' + formatToken(uiAmount, token) + ' ' + tokenCfg.name + ' (need ' + formatToken(totalNeeded, token) + ')';
-          walletBalanceEl.className = 'balance low';
-        }
-      }catch(e){
-        walletBalanceEl.textContent = 'Balance: 0 ' + tokenCfg.name + ' (need ' + formatToken(totalNeeded, token) + ')';
-        walletBalanceEl.className = 'balance low';
-      }
-    }
-  }catch(e){
-    walletBalanceEl.textContent = 'Could not fetch balance';
-  }
-}
-
-async function disconnect(){
-  try{ await window.phantom?.solana?.disconnect(); }catch(e){}
-  state.connectedPubkey = null;
-  walletStateEl.classList.remove('show');
-  payBtn.style.display = 'none';
-  connectBtn.style.display = 'flex';
-  clearBanners();
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  PAY — build, sign, send real transaction
-// ═══════════════════════════════════════════════════════════════════════════
-async function handlePay(){
-  clearBanners();
-  if (!state.connectedPubkey || !connection || !sw3){
-    showError('Wallet not ready. Reconnect Phantom.');
-    return;
-  }
-  if (state.tokenAmount <= 0 || state.rawAmount === 0n){
-    showError('Price not loaded yet. Wait a moment and try again.');
-    return;
+    qHeroEl.classList.remove('sol','usdc','finn');
+    qHeroEl.classList.add(token.toLowerCase());
+    qHeroLabelEl.textContent = tokenDisplay(token);
+    qTokenUnitEl.textContent = tokenDisplay(token);
+    qReceiveUnitEl.textContent = tokenDisplay(token);
+    rateTokenEl.textContent = tokenDisplay(token);
+    rateSourceEl.textContent = token==='FINN' ? 'LIVE · DEXSCREENER' : (token==='USDC' ? 'STABLE' : 'LIVE · COINGECKO');
+    computeQuote();
+    fetchRate();
   }
 
-  payBtn.classList.add('loading');
-  payBtn.disabled = true;
+  function computeQuote(){
+    state.amount   = parseFloat(amountEl.value)||0;
+    state.currency = currencyEl.value;
+    state.desc     = descEl.value.trim();
+    state.wallet   = walletEl.value.trim();
 
-  try{
-    const sender    = state.connectedPubkey;
-    const recipient = new sw3.PublicKey(merchant);
-    const tx = new sw3.Transaction();
+    const usdValue = fiatToUsd(state.amount, state.currency);
+    const cfg = TOKENS[state.token];
+    const tokenAmount = cfg.rate>0 ? usdValue/cfg.rate : 0;
 
-    // Should we add a tip?
-    const addTip = TIP_ENABLED && state.tipActive && state.rawTip > 0n;
-    const builderPubkey = addTip ? new sw3.PublicKey(BUILDER_WALLET) : null;
+    qFiatEl.innerHTML = '$'+state.amount.toFixed(2)+'<span class="unit">'+state.currency+'</span>';
+    qTokenEl.innerHTML = formatTokenAmount(tokenAmount, state.token)+'<span class="unit">'+tokenDisplay(state.token)+'</span>';
+    qReceiveEl.innerHTML = formatTokenAmount(tokenAmount, state.token)+'<span class="unit">'+tokenDisplay(state.token)+'</span>';
 
-    if (token === 'SOL'){
-      // Native SOL transfer (main payment)
-      tx.add(sw3.SystemProgram.transfer({
-        fromPubkey: sender,
-        toPubkey:   recipient,
-        lamports:   Number(state.rawAmount),
-      }));
-      // Tip transfer (if enabled)
-      if (addTip){
-        tx.add(sw3.SystemProgram.transfer({
-          fromPubkey: sender,
-          toPubkey:   builderPubkey,
-          lamports:   Number(state.rawTip),
-        }));
+    const rateDisp = cfg.rate<0.01 ? cfg.rate.toFixed(6) : cfg.rate.toFixed(cfg.rate<10?4:2);
+    rateValEl.textContent = '$'+rateDisp;
+  }
+
+  async function fetchRate(){
+    const token = state.token;
+    const cfg = TOKENS[token];
+    if (token==='USDC'){ cfg.rate=1; computeQuote(); return; }
+    try{
+      if (token==='SOL'){
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd',{cache:'no-store'});
+        const data = await res.json();
+        const p = data?.solana?.usd;
+        if (p>0) cfg.rate = p;
+      } else if (token==='FINN'){
+        const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/'+FINN_MINT,{cache:'no-store'});
+        const data = await res.json();
+        const p = data?.pairs?.[0]?.priceUsd;
+        if (p && parseFloat(p)>0) cfg.rate = parseFloat(p);
       }
-    } else {
-      // SPL token transfer (USDC or FINN)
-      const mintPubkey = new sw3.PublicKey(tokenCfg.mint);
-      const senderAta  = await findAssociatedTokenAddress(sender, mintPubkey);
-      const destAta    = await findAssociatedTokenAddress(recipient, mintPubkey);
+    }catch(e){}
+    computeQuote();
+  }
 
-      // Check if destination ATA exists; if not, prepend creation instruction
-      const destInfo = await connection.getAccountInfo(destAta);
-      if (!destInfo){
-        tx.add(createAssociatedTokenAccountInstruction(sender, destAta, recipient, mintPubkey));
-      }
+  function validWallet(addr){
+    return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(addr);
+  }
 
-      // Main payment
-      tx.add(createSPLTransferInstruction(senderAta, destAta, sender, state.rawAmount));
-
-      // Tip transfer (if enabled)
-      if (addTip){
-        const builderAta = await findAssociatedTokenAddress(builderPubkey, mintPubkey);
-        const builderInfo = await connection.getAccountInfo(builderAta);
-        if (!builderInfo){
-          tx.add(createAssociatedTokenAccountInstruction(sender, builderAta, builderPubkey, mintPubkey));
-        }
-        tx.add(createSPLTransferInstruction(senderAta, builderAta, sender, state.rawTip));
-      }
+  function generateLink(){
+    if (!state.amount||state.amount<=0){ amountEl.focus(); return; }
+    if (!validWallet(state.wallet)){
+      walletEl.focus();
+      walletEl.style.borderColor = '#ed1c24';
+      setTimeout(()=>{walletEl.style.borderColor=''}, 1500);
+      return;
     }
 
-    // Set blockhash + fee payer
-    const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash('confirmed');
-    tx.recentBlockhash = blockhash;
-    tx.feePayer = sender;
+    const params = new URLSearchParams({
+      to: state.wallet,
+      amount: state.amount.toString(),
+      cur: state.currency,
+      token: state.token,
+    });
+    if (state.desc) params.set('d', state.desc);
 
-    // Sign and send via Phantom
-    showInfo('<b>Confirm in Phantom</b>Approve the transaction in your wallet popup.');
-    const { signature } = await window.phantom.solana.signAndSendTransaction(tx);
+    const url = 'https://finnputerpay.xyz/pay/?'+params.toString();
 
-    // Wait for confirmation
-    showInfo('<b>Processing…</b>Transaction sent. Waiting for confirmation.');
-    await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'confirmed');
-
-    // Show success
-    showSuccess(signature);
-  }catch(e){
-    let msg = e?.message || 'Transaction failed.';
-    if (e?.code === 4001 || msg.includes('User rejected')) msg = 'You rejected the transaction.';
-    else if (msg.includes('insufficient') || msg.includes('0x1')) msg = 'Insufficient balance to complete this payment.';
-    showError(msg);
-  }finally{
-    payBtn.classList.remove('loading');
-    payBtn.disabled = false;
-  }
-}
-
-function showSuccess(signature){
-  payState.style.display = 'none';
-  successState.classList.add('show');
-  $('success-amount').textContent = formatToken(state.tokenAmount, token) + ' ' + tokenCfg.name + ' sent to ' + truncate(merchant);
-  $('tx-link').href = 'https://solscan.io/tx/' + signature;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-//  QR FALLBACK (Solana Pay URL for mobile scan)
-// ═══════════════════════════════════════════════════════════════════════════
-function buildSolanaPayUrl(){
-  const url = new URL('solana:' + merchant);
-  if (token === 'SOL'){
-    url.searchParams.set('amount', state.tokenAmount.toFixed(6));
-  } else {
-    url.searchParams.set('amount', state.tokenAmount.toFixed(2));
-    url.searchParams.set('spl-token', tokenCfg.mint);
-  }
-  url.searchParams.set('label', 'FinnputerPay');
-  url.searchParams.set('message', desc || ('Payment #' + invoiceId));
-  return url.toString();
-}
-
-function toggleQr(){
-  const fallback = $('qr-fallback');
-  const willShow = !fallback.classList.contains('show');
-  if (willShow){
-    const box = $('solpay-qr');
-    box.innerHTML = '';
-    new QRCode(box, {
-      text: buildSolanaPayUrl(),
-      width: 136, height: 136,
+    qrWrap.innerHTML = '';
+    new QRCode(qrWrap, {
+      text: url, width: 142, height: 142,
       colorDark: '#08080c', colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.M,
     });
-    fallback.classList.add('show');
-    qrBtn.textContent = 'Hide QR';
-  } else {
-    fallback.classList.remove('show');
-    qrBtn.textContent = 'Show QR for mobile wallet';
+
+    linkUrlEl.value = url;
+    quotePane.style.display = 'none';
+    resultPane.classList.add('show');
   }
-}
 
-// ═══════════════════════════════════════════════════════════════════════════
-//  EVENT BINDINGS
-// ═══════════════════════════════════════════════════════════════════════════
-connectBtn.addEventListener('click', connectPhantom);
-payBtn.addEventListener('click', handlePay);
-qrBtn.addEventListener('click', toggleQr);
-disconnectBtn.addEventListener('click', disconnect);
+  function resetResult(){
+    resultPane.classList.remove('show');
+    quotePane.style.display = '';
+    walletEl.focus();
+  }
 
-// Tip toggle initialization
-if (TIP_ENABLED){
-  $('tip-toggle').classList.add('show');
-  $('tip-amount-unit').textContent = token;
-  $('tip-checkbox').addEventListener('change', (e) => {
-    state.tipActive = e.target.checked;
-    computeQuote();
-    // refresh balance check if connected
-    if (state.connectedPubkey) checkBalance(state.connectedPubkey);
+  async function copyLink(){
+    try{ await navigator.clipboard.writeText(linkUrlEl.value); }
+    catch(e){ linkUrlEl.select(); document.execCommand('copy'); }
+    copyBtn.textContent = 'Copied';
+    copyBtn.classList.add('copied');
+    setTimeout(()=>{ copyBtn.textContent='Copy'; copyBtn.classList.remove('copied'); }, 1600);
+  }
+
+  tokenSelectEl.addEventListener('click', e=>{
+    const opt = e.target.closest('.tok-opt');
+    if (opt) setToken(opt.dataset.token);
   });
-}
+  [amountEl,currencyEl,descEl,walletEl].forEach(el=>{
+    el.addEventListener('input', computeQuote);
+    el.addEventListener('change', computeQuote);
+  });
+  generateBtn.addEventListener('click', generateLink);
+  copyBtn.addEventListener('click', copyLink);
+  openLinkBtn.addEventListener('click', ()=>window.open(linkUrlEl.value,'_blank'));
+  newLinkBtn.addEventListener('click', resetResult);
 
-// Refresh rate every 60s
-setInterval(fetchRate, 60_000);
+  setToken('SOL');
+  fetchRate();
+  setInterval(fetchRate, 60_000);
 </script>
 
 </body>
