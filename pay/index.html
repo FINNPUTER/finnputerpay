@@ -29,7 +29,7 @@
     --bg:#08080c;--glass:rgba(255,255,255,0.035);--glass-hi:rgba(255,255,255,0.06);
     --border:rgba(255,255,255,0.08);--border-hi:rgba(255,255,255,0.14);
     --ink:#f5f2ec;--ink-2:#b8b5ae;--ink-dim:#6e6b66;
-    --finn:#7ED957;--sol:#9945FF;--usdc:#2775ca;--live:#00e676;
+    --finn:#7ED957;--sol:#9945FF;--usdc:#2775ca;--bro:#ff8c42;--live:#00e676;
     --amber:#ffb800;--red:#ed1c24;
     --display:'Fraunces',Georgia,serif;
     --sans:'DM Sans',system-ui,-apple-system,sans-serif;
@@ -56,6 +56,7 @@
   .head h1.sol em{color:var(--sol)}
   .head h1.usdc em{color:var(--usdc)}
   .head h1.finn em{color:var(--finn)}
+  .head h1.bro em{color:var(--bro)}
   .head p.sub{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-dim)}
   .head p.sub b{color:var(--ink-2);font-weight:500}
 
@@ -67,6 +68,7 @@
   .invoice-line .chain{color:var(--finn)}
   .invoice-line .chain.sol{color:var(--sol)}
   .invoice-line .chain.usdc{color:var(--usdc)}
+  .invoice-line .chain.bro{color:var(--bro)}
   .desc-row{font-family:var(--display);font-size:20px;font-weight:400;letter-spacing:-0.015em;color:var(--ink);margin-bottom:6px;line-height:1.25}
   .desc-row.empty{font-style:italic;color:var(--ink-dim);font-size:18px}
   .merchant-addr{font-family:var(--mono);font-size:11px;color:var(--ink-dim);display:flex;align-items:center;gap:8px;margin-bottom:24px}
@@ -84,6 +86,7 @@
   .row.hero.sol .v{color:var(--sol)}
   .row.hero.usdc .v{color:var(--usdc)}
   .row.hero.finn .v{color:var(--finn)}
+  .row.hero.bro .v{color:var(--bro)}
   .row.rate .v{font-size:13px;color:var(--ink-dim);font-family:var(--mono)}
   .row.rate .rate-live{display:inline-flex;align-items:center;gap:6px;color:var(--live);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.08em}
   .row.rate .rate-live::before{content:'';width:6px;height:6px;background:var(--live);border-radius:100px;box-shadow:0 0 8px var(--live);animation:pulse 1.8s ease-in-out infinite}
@@ -289,6 +292,8 @@
     powered by <a href="/">finnputerpay.xyz</a>
     <span class="sep">·</span>
     <a href="https://solscan.io/token/Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS" target="_blank" rel="noopener">$FINNPUTER</a>
+    <span class="sep">·</span>
+    <a href="https://solscan.io/token/BdDUwvG4ozPFi7mR8RACmdgKztTJ9ZGFHvofD7ubpump" target="_blank" rel="noopener">$BRO</a>
   </footer>
 
 </div>
@@ -298,6 +303,7 @@
 //  CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════
 const FINN_MINT = 'Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS';
+const BRO_MINT  = 'BdDUwvG4ozPFi7mR8RACmdgKztTJ9ZGFHvofD7ubpump';
 const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
 const RPC_URL   = 'https://api.mainnet-beta.solana.com';
 const EUR_USD   = 1.08;
@@ -320,6 +326,7 @@ const TOKEN_CONFIG = {
   SOL:  { name: 'SOL',        decimals: 9, mint: null,      isNative: true,  chainLabel: 'SOLANA · NATIVE' },
   USDC: { name: 'USDC',       decimals: 6, mint: USDC_MINT, isNative: false, chainLabel: 'SOLANA · SPL' },
   FINN: { name: '$FINNPUTER', decimals: 6, mint: FINN_MINT, isNative: false, chainLabel: 'SOLANA · BAGS.FM' },
+  BRO:  { name: '$BRO',       decimals: 6, mint: BRO_MINT,  isNative: false, chainLabel: 'SOLANA · PUMP.FUN' },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -390,7 +397,7 @@ $('rate-token').textContent = tokenCfg.name;
 $('row-pay-unit').textContent = tokenCfg.name;
 $('head-token').textContent = tokenCfg.name;
 $('head-title').className = token.toLowerCase();
-$('hero-row').classList.remove('sol', 'usdc', 'finn');
+$('hero-row').classList.remove('sol', 'usdc', 'finn', 'bro');
 $('hero-row').classList.add(token.toLowerCase());
 $('pay-token').textContent = tokenCfg.name;
 
@@ -398,7 +405,7 @@ $('pay-token').textContent = tokenCfg.name;
 //  LIVE RATE
 // ═══════════════════════════════════════════════════════════════════════════
 const state = {
-  rateUsd:     token === 'USDC' ? 1 : (token === 'SOL' ? 150 : 0.00015),
+  rateUsd:     token === 'USDC' ? 1 : (token === 'SOL' ? 150 : (token === 'BRO' ? 0.0001 : 0.00015)),
   tokenAmount: 0,
   rawAmount:   0n,
   tipAmount:   0,
@@ -447,6 +454,11 @@ async function fetchRate(){
       if (p > 0) state.rateUsd = p;
     } else if (token === 'FINN'){
       const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + FINN_MINT, {cache:'no-store'});
+      const data = await res.json();
+      const p = data?.pairs?.[0]?.priceUsd;
+      if (p && parseFloat(p) > 0) state.rateUsd = parseFloat(p);
+    } else if (token === 'BRO'){
+      const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + BRO_MINT, {cache:'no-store'});
       const data = await res.json();
       const p = data?.pairs?.[0]?.priceUsd;
       if (p && parseFloat(p) > 0) state.rateUsd = parseFloat(p);

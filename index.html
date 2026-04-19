@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <title>FinnputerPay — Creator payment links on Solana.</title>
-<meta name="description" content="Non-custodial payment links for Solana creators. Accept SOL, USDC, or $FINNPUTER. One tap in Phantom. Zero custody, zero sign-up." />
+<meta name="description" content="Non-custodial payment links for Solana creators. Accept SOL, USDC, $FINNPUTER, or $BRO. One tap in Phantom. Zero custody, zero sign-up." />
 <meta name="theme-color" content="#08080c" />
 <link rel="canonical" href="https://finnputerpay.xyz/" />
 
@@ -15,7 +15,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="FinnputerPay" />
 <meta property="og:title" content="FinnputerPay — Creator payment links on Solana." />
-<meta property="og:description" content="Accept SOL, USDC, or $FINNPUTER. One tap in Phantom. Non-custodial." />
+<meta property="og:description" content="Accept SOL, USDC, $FINNPUTER, or $BRO. One tap in Phantom. Non-custodial." />
 <meta property="og:url" content="https://finnputerpay.xyz/" />
 <meta property="og:image" content="https://finnputerpay.xyz/og-image.png" />
 <meta property="og:image:width" content="1200" />
@@ -36,7 +36,7 @@
     --bg:#08080c;--glass:rgba(255,255,255,0.035);--glass-hi:rgba(255,255,255,0.06);
     --border:rgba(255,255,255,0.08);--border-hi:rgba(255,255,255,0.14);
     --ink:#f5f2ec;--ink-2:#b8b5ae;--ink-dim:#6e6b66;
-    --finn:#7ED957;--sol:#9945FF;--usdc:#2775ca;--live:#00e676;
+    --finn:#7ED957;--sol:#9945FF;--usdc:#2775ca;--bro:#ff8c42;--live:#00e676;
     --display:'Fraunces',Georgia,serif;
     --sans:'DM Sans',system-ui,-apple-system,sans-serif;
     --mono:'JetBrains Mono',ui-monospace,monospace;
@@ -67,6 +67,7 @@
   .hero p.lede .finn{color:var(--finn);font-weight:600}
   .hero p.lede .sol{color:var(--sol);font-weight:600}
   .hero p.lede .usdc{color:var(--usdc);font-weight:600}
+  .hero p.lede .bro{color:var(--bro);font-weight:600}
   @media (max-width:720px){.hero{padding:48px 20px 24px}}
 
   .stage{max-width:1100px;margin:56px auto 0;padding:0 40px}
@@ -87,14 +88,16 @@
   .field label{display:block;font-size:12px;font-weight:500;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:9px}
   .field label .aside{color:var(--ink-dim);text-transform:none;letter-spacing:0;font-weight:400}
 
-  .token-select{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--glass-hi);border:1px solid var(--border);border-radius:14px;padding:4px}
-  .tok-opt{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:13px 8px;font-size:14px;font-weight:500;color:var(--ink-dim);cursor:pointer;border-radius:10px;transition:color 0.2s,background 0.2s,box-shadow 0.2s;user-select:none}
+  .token-select{display:grid;grid-template-columns:repeat(4,1fr);background:var(--glass-hi);border:1px solid var(--border);border-radius:14px;padding:4px}
+  @media (max-width:520px){.token-select{grid-template-columns:1fr 1fr}}
+  .tok-opt{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:13px 6px;font-size:13px;font-weight:500;color:var(--ink-dim);cursor:pointer;border-radius:10px;transition:color 0.2s,background 0.2s,box-shadow 0.2s;user-select:none}
   .tok-opt .tok-sub{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:0.06em;opacity:0.6}
   .tok-opt.active{color:var(--ink);background:rgba(255,255,255,0.08);box-shadow:0 0 0 1px rgba(255,255,255,0.1) inset,0 4px 12px rgba(0,0,0,0.2)}
   .tok-opt.active.sol{color:var(--sol);box-shadow:0 0 0 1px rgba(153,69,255,0.3) inset,0 4px 12px rgba(153,69,255,0.15)}
   .tok-opt.active.usdc{color:var(--usdc);box-shadow:0 0 0 1px rgba(39,117,202,0.3) inset,0 4px 12px rgba(39,117,202,0.15)}
   .tok-opt.active.finn{color:var(--finn);box-shadow:0 0 0 1px rgba(126,217,87,0.3) inset,0 4px 12px rgba(126,217,87,0.15)}
-  .tok-opt[data-token="FINN"]{font-size:12px;letter-spacing:-0.02em}
+  .tok-opt.active.bro{color:var(--bro);box-shadow:0 0 0 1px rgba(255,140,66,0.3) inset,0 4px 12px rgba(255,140,66,0.15)}
+  .tok-opt[data-token="FINN"]{font-size:11px;letter-spacing:-0.02em}
 
   .amount-row{display:flex;gap:12px;align-items:stretch}
   .amount-row .amount{flex:1}
@@ -128,6 +131,7 @@
   .quote-row.hero.sol .v{color:var(--sol)}
   .quote-row.hero.usdc .v{color:var(--usdc)}
   .quote-row.hero.finn .v{color:var(--finn)}
+  .quote-row.hero.bro .v{color:var(--bro)}
 
   .preview-placeholder{margin:auto 0 0;text-align:center;color:var(--ink-dim);padding-top:14px}
   .preview-placeholder p{font-size:13px;max-width:280px;margin:0 auto;line-height:1.55}
@@ -190,7 +194,7 @@
   <header class="hero">
     <div class="eyebrow">NON-CUSTODIAL · SOLANA-NATIVE · ONE TAP</div>
     <h1>Get paid in <span class="italic">whatever</span><br/><span class="finn">you want</span>.</h1>
-    <p class="lede">Non-custodial payment links on Solana. Accept <span class="sol">SOL</span>, <span class="usdc">USDC</span>, or <span class="finn">$FINNPUTER</span> — your choice, per link. Fans tap, Phantom opens, you get paid. No middleman, no sign-up, no custody.</p>
+    <p class="lede">Non-custodial payment links on Solana. Accept <span class="sol">SOL</span>, <span class="usdc">USDC</span>, <span class="finn">$FINNPUTER</span>, or <span class="bro">$BRO</span> — your choice, per link. Fans tap, Phantom opens, you get paid. No middleman, no sign-up, no custody.</p>
   </header>
 
   <section class="stage">
@@ -206,6 +210,7 @@
               <div class="tok-opt sol active" data-token="SOL">SOL<span class="tok-sub">native</span></div>
               <div class="tok-opt usdc" data-token="USDC">USDC<span class="tok-sub">stable</span></div>
               <div class="tok-opt finn" data-token="FINN">$FINNPUTER<span class="tok-sub">creator</span></div>
+              <div class="tok-opt bro" data-token="BRO">$BRO<span class="tok-sub">degen</span></div>
             </div>
           </div>
 
@@ -310,6 +315,7 @@
     <div class="foot-inner">
       <div class="foot-brand"><img src="/logo.png" alt="" /><span>Finnputer Pay</span></div>
       <div class="foot-meta">$FINNPUTER · <a href="https://solscan.io/token/Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS" target="_blank" rel="noopener">Xp8d…BAGS</a></div>
+      <div class="foot-meta">$BRO · <a href="https://solscan.io/token/BdDUwvG4ozPFi7mR8RACmdgKztTJ9ZGFHvofD7ubpump" target="_blank" rel="noopener">BdDU…pump</a></div>
       <div class="foot-meta">Non-custodial · Solana mainnet</div>
     </div>
     <div style="text-align:center;margin-top:20px;padding-top:20px;border-top:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em;line-height:1.6">
@@ -321,12 +327,14 @@
 
 <script>
   const FINN_MINT = 'Xp8dC5i7EcAeZo873ijwvipt3pUbgvgi5sHsg9sBAGS';
+  const BRO_MINT  = 'BdDUwvG4ozPFi7mR8RACmdgKztTJ9ZGFHvofD7ubpump';
   const EUR_USD = 1.08;
 
   const TOKENS = {
     SOL:  { decimals: 9, rate: 150 },
     USDC: { decimals: 6, rate: 1 },
     FINN: { decimals: 6, rate: 0.00015 },
+    BRO:  { decimals: 6, rate: 0.0001 },
   };
 
   const state = { token:'SOL', amount:10, currency:'USD', desc:'', wallet:'' };
@@ -342,7 +350,11 @@
 
   function fiatToUsd(a,c){ return c==='USD'?a:a*EUR_USD }
 
-  function tokenDisplay(t){ return t==='FINN' ? '$FINNPUTER' : t; }
+  function tokenDisplay(t){
+    if (t==='FINN') return '$FINNPUTER';
+    if (t==='BRO')  return '$BRO';
+    return t;
+  }
 
   function formatTokenAmount(n,sym){
     if (sym==='USDC') return n.toFixed(2);
@@ -357,13 +369,15 @@
     tokenSelectEl.querySelectorAll('.tok-opt').forEach(el=>{
       el.classList.toggle('active', el.dataset.token===token);
     });
-    qHeroEl.classList.remove('sol','usdc','finn');
+    qHeroEl.classList.remove('sol','usdc','finn','bro');
     qHeroEl.classList.add(token.toLowerCase());
     qHeroLabelEl.textContent = tokenDisplay(token);
     qTokenUnitEl.textContent = tokenDisplay(token);
     qReceiveUnitEl.textContent = tokenDisplay(token);
     rateTokenEl.textContent = tokenDisplay(token);
-    rateSourceEl.textContent = token==='FINN' ? 'LIVE · DEXSCREENER' : (token==='USDC' ? 'STABLE' : 'LIVE · COINGECKO');
+    if (token==='USDC')      rateSourceEl.textContent = 'STABLE';
+    else if (token==='SOL')  rateSourceEl.textContent = 'LIVE · COINGECKO';
+    else                     rateSourceEl.textContent = 'LIVE · DEXSCREENER';
     computeQuote();
     fetchRate();
   }
@@ -398,6 +412,11 @@
         if (p>0) cfg.rate = p;
       } else if (token==='FINN'){
         const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/'+FINN_MINT,{cache:'no-store'});
+        const data = await res.json();
+        const p = data?.pairs?.[0]?.priceUsd;
+        if (p && parseFloat(p)>0) cfg.rate = parseFloat(p);
+      } else if (token==='BRO'){
+        const res = await fetch('https://api.dexscreener.com/latest/dex/tokens/'+BRO_MINT,{cache:'no-store'});
         const data = await res.json();
         const p = data?.pairs?.[0]?.priceUsd;
         if (p && parseFloat(p)>0) cfg.rate = parseFloat(p);
